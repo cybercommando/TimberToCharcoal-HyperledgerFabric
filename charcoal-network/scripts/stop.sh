@@ -1,6 +1,10 @@
 #!/bin/bash
+echo "*********************************"
+echo "        Stopping Network         "
+echo "*********************************"
 
-echo "Stopping containers... "
-docker-compose -f docker-compose-cli.yaml down --volumes --remove-orphans
-rm -r ./crypto-config
-rm -r ./channel-artifacts
+docker-compose -f ./charcoal-network/docker-compose-cli.yaml down --volumes --remove-orphans
+rm -r ./charcoal-network/crypto-config
+rm -r ./charcoal-network/channel-artifacts
+rm -r ./charcoal-network/base/docker-compose-base.yaml
+rm -r ./wallet
