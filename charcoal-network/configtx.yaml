@@ -1,0 +1,147 @@
+---
+Organizations:
+    - &OrdererOrg
+        Name: OrdererOrg
+        ID: OrdererMSP
+        MSPDir: crypto-config/ordererOrganizations/example.com/msp
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('OrdererMSP.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('OrdererMSP.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('OrdererMSP.admin')"
+
+    - &CertifiedCompanies
+        Name: CertifiedCompaniesMSP
+        ID: CertifiedCompaniesMSP
+        MSPDir: crypto-config/peerOrganizations/certifiedCompanies.example.com/msp
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('CertifiedCompaniesMSP.admin', 'CertifiedCompaniesMSP.peer', 'CertifiedCompaniesMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('CertifiedCompaniesMSP.admin', 'CertifiedCompaniesMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('CertifiedCompaniesMSP.admin')"
+
+    - &Certifiers
+        Name: CertifiersMSP
+        ID: CertifiersMSP
+        MSPDir: crypto-config/peerOrganizations/certifiers.example.com/msp
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('CertifiersMSP.admin', 'CertifiersMSP.peer', 'CertifiersMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('CertifiersMSP.admin', 'CertifiersMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('CertifiersMSP.admin')"
+
+Capabilities:
+    Channel: &ChannelCapabilities
+        V1_4_3: true
+        V1_3: false
+        V1_1: false
+    Orderer: &OrdererCapabilities
+        V1_4_2: true
+        V1_1: false
+    Application: &ApplicationCapabilities
+        V1_4_2: true
+        V1_3: false
+        V1_2: false
+        V1_1: false
+
+Application: &ApplicationDefaults
+    Organizations:
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+
+    Capabilities:
+        <<: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults
+    OrdererType: solo
+    Addresses:
+        - orderer.example.com:7050
+    BatchTimeout: 2s
+    BatchSize:
+        MaxMessageCount: 10
+        AbsoluteMaxBytes: 99 MB
+        PreferredMaxBytes: 512 KB
+
+    Kafka:
+        Brokers:
+            - 127.0.0.1:9092
+
+    Organizations:
+
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        BlockValidation:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+
+Channel: &ChannelDefaults
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+    Capabilities:
+        <<: *ChannelCapabilities
+
+Profiles:
+
+    AuditOrdererGenesis:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg
+            Capabilities:
+                <<: *OrdererCapabilities
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *CertifiedCompanies
+                    - *Certifiers
+    AuditChannel:
+        Consortium: SampleConsortium
+        <<: *ChannelDefaults
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *CertifiedCompanies
+                - *Certifiers
+            Capabilities:
+                <<: *ApplicationCapabilities
+
