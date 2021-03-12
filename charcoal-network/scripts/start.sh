@@ -1,16 +1,26 @@
 #!/bin/bash
+export IMAGE_TAG=1.4.3
 
 echo "Creating containers... "
-docker-compose -f docker-compose-cli.yaml up -d
+
+# TODO This approach is hacky; instead, identify where hyperledger/fabric-ccenv is pulled and update the tag to 1.4.3
+docker pull hyperledger/fabric-ccenv:1.4.3
+docker tag hyperledger/fabric-ccenv:1.4.3 hyperledger/fabric-ccenv:latest
+
+docker-compose -f ./charcoal-network/docker-compose-cli.yaml up -d
 echo 
 echo "Containers started" 
 echo 
 docker ps
 
 echo
-#Creating channel and join org1
+
+echo "Creating channel and join CertifiedCompanies"
+
 docker exec -it cli ./scripts/channel/createChannel.sh
-#Creating channel and join org2
-docker exec -e "CORE_PEER_LOCALMSPID=Org2MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp" -e "CORE_PEER_ADDRESS=peer0.org2.example.com:7051" -it cli ./scripts/channel/joinOrg2.sh
+
+echo "Joining Certifiers"
+
+docker exec -it cli ./scripts/channel/join-peer.sh peer0 certifiers CertifiersMSP 8051 1.0
 
 

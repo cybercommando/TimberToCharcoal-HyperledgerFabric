@@ -1,0 +1,97 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+services:
+
+  orderer.example.com:
+    container_name: orderer.example.com
+    extends:
+      file: peer-base.yaml
+      service: orderer-base
+    volumes:
+        - ../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+        - ../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
+        - ../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
+        - orderer.example.com:/var/hyperledger/production/orderer
+    ports:
+      - 7050:7050
+
+  peer0.certifiedCompanies.example.com:
+    container_name: peer0.certifiedCompanies.example.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.certifiedCompanies.example.com
+      - CORE_PEER_ADDRESS=peer0.certifiedCompanies.example.com:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.certifiedCompanies.example.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.certifiedCompanies.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.certifiedCompanies.example.com:7051
+      - CORE_PEER_LOCALMSPID=CertifiedCompaniesMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/certifiedCompanies.example.com/peers/peer0.certifiedCompanies.example.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/certifiedCompanies.example.com/peers/peer0.certifiedCompanies.example.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.certifiedCompanies.example.com:/var/hyperledger/production
+    ports:
+      - 7051:7051
+
+  peer0.certifiers.example.com:
+    container_name: peer0.certifiers.example.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.certifiers.example.com
+      - CORE_PEER_ADDRESS=peer0.certifiers.example.com:8051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.certifiers.example.com:8052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.certifiers.example.com:8051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.certifiedCompanies.example.com:8051
+      - CORE_PEER_LOCALMSPID=CertifiersMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/certifiers.example.com/peers/peer0.certifiers.example.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/certifiers.example.com/peers/peer0.certifiers.example.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.certifiers.example.com:/var/hyperledger/production
+    ports:
+      - 8051:8051
+
+
+  caCertifiedCompanies:
+    image: hyperledger/fabric-ca:$IMAGE_TAG
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-certifiedCompanies
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.certifiedCompanies.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/8bb1ea340a0e6ce235e556ca00e75942bbe442f44f377fc60491a0a2df2b8716_sk
+      - FABRIC_CA_SERVER_PORT=7054
+    ports:
+      - "7054:7054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.certifiedCompanies.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/8bb1ea340a0e6ce235e556ca00e75942bbe442f44f377fc60491a0a2df2b8716_sk -b admin:adminpw -d'
+    volumes:
+      - ../crypto-config/peerOrganizations/certifiedCompanies.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+        
+  caCertifiers:
+    image: hyperledger/fabric-ca:$IMAGE_TAG
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-certifiers
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.certifiers.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/f23c399b21fa0bb9e804956f522ee4215c7ec28379b17ff241ae6a097d29ac48_sk
+      - FABRIC_CA_SERVER_PORT=8054
+    ports:
+      - "8054:8054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.certifiers.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/f23c399b21fa0bb9e804956f522ee4215c7ec28379b17ff241ae6a097d29ac48_sk -b admin:adminpw -d'
+    volumes:
+      - ../crypto-config/peerOrganizations/certifiers.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    
