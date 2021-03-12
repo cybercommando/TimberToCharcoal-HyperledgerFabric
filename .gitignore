@@ -1,5 +1,5 @@
 node_modules
-supply-network/channel-artifacts/
-sypply-network/crypto-config.
+charcoal-network/channel-artifacts/
+charcoal-network/crypto-config/
 wallet/
 *~
