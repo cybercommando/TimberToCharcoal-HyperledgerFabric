@@ -12,15 +12,13 @@ echo
 echo "Containers started" 
 echo 
 docker ps
-
 echo
 
-echo "Creating channel and join CertifiedCompanies"
-
+#Joining CertifiedCompanies
+echo "Creating Channel and join CertifiedCompanies"
 docker exec -it cli ./scripts/channel/createChannel.sh
 
-echo "Joining Certifiers"
-
+#Joining Certifiers
 docker exec -it cli ./scripts/channel/join-peer.sh peer0 certifiers CertifiersMSP 8051 1.0
 
 

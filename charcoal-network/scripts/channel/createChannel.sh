@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Creating channel..."
+echo "Creating Channel..."
 ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 CORE_PEER_LOCALMSPID=CertifiedCompaniesMSP
 CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/certifiedCompanies.example.com/peers/peer0.certifiedCompanies.example.com/tls/ca.crt
