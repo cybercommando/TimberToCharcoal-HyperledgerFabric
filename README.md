@@ -18,4 +18,17 @@ https://hyperledger-fabric.readthedocs.io/en/release-1.4/prereqs.html
 5. Go to the folder
 `cd TimberToCharcoal-HyperledgerFabric`
 
+
 # Start the network
+
+1. Generate the crypto material and start the network
+`./network.sh start`
+
+
+# Stop the network
+
+`./network.sh stop`
+
+
+# API Configuration
+[Not Implemented Yet]
