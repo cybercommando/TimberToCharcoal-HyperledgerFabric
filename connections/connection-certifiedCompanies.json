@@ -1,0 +1,49 @@
+{
+    "name": "supply-chain-certifiedCompanies",
+    "version": "1.0.0",
+    "client": {
+        "organization": "certifiedCompanies",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "certifiedCompanies": {
+            "mspid": "CertifiedCompaniesMSP",
+            "peers": [
+                "peer0.certifiedCompanies.example.com"
+            ],
+            "certificateAuthorities": [
+                "ca.certifiedCompanies.example.com"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.certifiedCompanies.example.com": {
+            "url": "grpcs://localhost:7051",
+            "tlsCACerts": {
+                "pem": ""
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.certifiedCompanies.example.com",
+                "hostnameOverride": "peer0.certifiedCompanies.example.com"
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "ca.certifiedCompanies.example.com": {
+            "url": "https://localhost:7054",
+            "caName": "ca-certifiedCompanies",
+            "tlsCACerts": {
+                "pem": ""
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}
