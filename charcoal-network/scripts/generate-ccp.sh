@@ -20,8 +20,8 @@ ORG=certifiedCompanies
 ORGMSP=CertifiedCompanies
 P0PORT=7051
 CAPORT=7054
-PEERPEM=./supply-network/crypto-config/peerOrganizations/certifiedCompanies.example.com/tlsca/tlsca.certifiedCompanies.example.com-cert.pem
-CAPEM=./supply-network/crypto-config/peerOrganizations/certifiedCompanies.example.com/ca/ca.certifiedCompanies.example.com-cert.pem
+PEERPEM=./charcoal-network/crypto-config/peerOrganizations/certifiedCompanies.example.com/tlsca/tlsca.certifiedCompanies.example.com-cert.pem
+CAPEM=./charcoal-network/crypto-config/peerOrganizations/certifiedCompanies.example.com/ca/ca.certifiedCompanies.example.com-cert.pem
 
 echo "$(json_ccp $ORG $ORGMSP $P0PORT $CAPORT $PEERPEM $CAPEM)" > ./connections/connection-certifiedCompanies.json
 
@@ -29,7 +29,7 @@ ORG=certifiers
 ORGMSP=Certifiers
 P0PORT=8051
 CAPORT=8054
-PEERPEM=./supply-network/crypto-config/peerOrganizations/certifiers.example.com/tlsca/tlsca.certifiers.example.com-cert.pem
-CAPEM=./supply-network/crypto-config/peerOrganizations/certifiers.example.com/ca/ca.certifiers.example.com-cert.pem
+PEERPEM=./charcoal-network/crypto-config/peerOrganizations/certifiers.example.com/tlsca/tlsca.certifiers.example.com-cert.pem
+CAPEM=./charcoal-network/crypto-config/peerOrganizations/certifiers.example.com/ca/ca.certifiers.example.com-cert.pem
 
 echo "$(json_ccp $ORG $ORGMSP $P0PORT $CAPORT $PEERPEM $CAPEM)" > ./connections/connection-certifiers.json
