@@ -28,3 +28,6 @@ PRIV_KEY=$(ls *_sk)
 cd $CURRENT_DIR
 cd ./charcoal-network/base
 sed $OPTS "s/CA2_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-base.yaml
+
+cd $CURRENT_DIR
+./charcoal-network/scripts/generate-ccp.sh
