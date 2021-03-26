@@ -8,3 +8,5 @@ docker exec -it cli ./scripts/install-cc/install-peer.sh peer0 certifiers Certif
 
 echo "Instanciating the chaincode..."
 docker exec -it cli ./scripts/install-cc/instanciate.sh
+
+docker ps
