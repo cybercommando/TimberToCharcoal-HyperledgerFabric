@@ -14,13 +14,11 @@ class InvoiceContract extends Contract {
     }
 
     async readInvoice(ctx, invoiceId) {
-        const exists = await this.invoiceExists(ctx, invoiceId);
-        if (!exists) {
+        const inv = await ctx.stub.getState(invoiceId);
+        if (!inv || inv.length === 0 ) {
             throw new Error(`The invoice ${invoiceId} does not exist`);
         }
-        const buffer = await ctx.stub.getState(invoiceId);
-        const asset = JSON.parse(buffer.toString());
-        return asset;
+        return inv.toString();
     }
 }
 
