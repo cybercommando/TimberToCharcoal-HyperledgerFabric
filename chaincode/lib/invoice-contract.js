@@ -17,7 +17,7 @@ class InvoiceContract extends BaseContract {
         const tempInvoice = JSON.parse(invoice);
         console.log(invoice);
         //Validation
-        //this._requireCertifiedCompanies(ctx);
+        this._requireCertifiedCompanies(ctx);
         this._require(tempInvoice.invoiceId.toString(), 'Invoice Id');
         this._require(tempInvoice.productId.toString(), 'Product Id');
         this._require(tempInvoice.volumn.toString(), 'Volumn');
@@ -50,7 +50,7 @@ class InvoiceContract extends BaseContract {
     }
 
     _requireCertifiedCompanies(ctx) {
-        if (ctx.clientIdentity.getMSPID !== 'CertifiedCompaniesMSP') {
+        if (ctx.clientIdentity.getMSPID() !== 'CertifiedCompaniesMSP') {
             throw new Error('This chaincode function can only be called by the CertifiedCompanies');
         }
     }
