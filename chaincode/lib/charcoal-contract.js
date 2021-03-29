@@ -4,13 +4,13 @@
 
 'use strict';
 
-const { BaseContract } = require('./Models/base-contract'),
+const { BaseContract } = require('./Services/base-contract'),
     { Invoice } = require('./Models/Invoice'),
-    events = require('./Models/events');
+    events = require('./Services/events');
 
-class InvoiceContract extends BaseContract {
+class CharcoalContract extends BaseContract {
     constructor() {
-        super('com.timbertocharcoal.invoicecontract');
+        super('com.timbertocharcoal.charcoalcontract');
     }
 
     async createInvoice(ctx, invoice) {
@@ -87,4 +87,4 @@ class InvoiceContract extends BaseContract {
     }
 }
 
-module.exports = InvoiceContract;
+module.exports = CharcoalContract;

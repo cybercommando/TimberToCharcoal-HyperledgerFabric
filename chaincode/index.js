@@ -4,7 +4,6 @@
 
 'use strict';
 
-const InvoiceContract = require('./lib/invoice-contract');
+const CharcoalContract = require('./lib/charcoal-contract');
 
-module.exports.InvoiceContract = InvoiceContract;
-module.exports.contracts = [ InvoiceContract ];
+module.exports.contracts = [ CharcoalContract ];
