@@ -1,0 +1,39 @@
+//=====================================
+// For Invoices
+//=====================================
+
+curl --request POST \
+--url http://localhost:3000/api/addInvoice \
+--header 'content-type: application/json' \
+--data '{ "invoiceId":"10001", "productId":"10002", "volumn":"1000", "buyer":"Zubair", "seller":"Husnain", "date":"12/12/21", "invoiceHash":"some temporary hash"}'
+
+curl --request GET \
+--url 'http://localhost:3000/api/getInvoice/10001' \
+--header 'content-type: application/jason'
+
+//=====================================
+// For Companies
+//=====================================
+
+curl --request POST \
+--url http://localhost:3000/api/registerCompany \
+--header 'content-type: application/json' \
+--data '{ "companyId":"CC001", "name":"Company 001", "status":"ACTIVE", "conversionRate":"20"}'
+
+curl --request POST \
+--url http://localhost:3000/api/registerCompany \
+--header 'content-type: application/json' \
+--data '{ "companyId":"CC009", "name":"Company 009", "status":"SUSPENDED", "conversionRate":"80"}'
+
+curl --request GET \
+--url 'http://localhost:3000/api/getAllCompanies' \
+--header 'content-type: application/jason'
+
+curl --request GET \
+--url 'http://localhost:3000/api/getCompany/CC001' \
+--header 'content-type: application/jason'
+
+curl --request PUT \
+--url http://localhost:3000/api/changeCompanyStatus \
+--header 'content-type: application/json' \
+--data '{ "companyId":"CC009", "status":"ACTIVE"}'

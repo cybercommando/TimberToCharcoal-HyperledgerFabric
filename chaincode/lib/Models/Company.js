@@ -1,14 +1,11 @@
 'use strict';
 
-class Invoice {
+class Company {
     constructor() {
-        this.invoiceId = '';
-        this.productId = '';
-        this.volumn = '';
-        this.seller = '';
-        this.buyer = '';
-        this.date = '';
-        this.invoiceHash = '';
+        this.companyId = '';
+        this.name = '';
+        this.status = '';
+        this.conversionRate = '';
     }
 
     static from(bufferOrJson) {
@@ -19,7 +16,7 @@ class Invoice {
             bufferOrJson = JSON.parse(bufferOrJson.toString('utf-8'));
 
         }
-        return Object.assign(new Invoice(), bufferOrJson);
+        return Object.assign(new Company(), bufferOrJson);
     }
 
     toBuffer() {
@@ -27,4 +24,4 @@ class Invoice {
     }
 }
 
-module.exports = { Invoice };
+module.exports = { Company };

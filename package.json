@@ -17,6 +17,7 @@
     "author": "Muhammad Zubair",
     "license": "Apache-2.0",
     "dependencies": {
+        "aggregation": "^1.2.7",
         "arraybuffer-to-string": "^1.0.2",
         "express": "^4.17.1",
         "fabric-ca-client": "~1.4.0",
