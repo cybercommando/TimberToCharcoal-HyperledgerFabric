@@ -1,5 +1,7 @@
 'use strict';
 
 module.exports = {
-    InvoiceInserted: 'InvoiceInserted'
+    InvoiceInserted: 'InvoiceInserted',
+    CompanyInserted: 'CompanyInserted',
+    CompanyStatusChanged: 'CompanyStatusChanged'
 };
