@@ -33,10 +33,28 @@ class CharcoalContract extends BaseContract {
         this._require(tempInvoice.invoiceHash.toString(), 'Invoice Hash');
 
         //Check Seller Certificate Here
-        //[Coming Soon]
+        if (await this._doesStateExist(ctx.stub, this._createCompanyCompositKey(ctx.stub, tempInvoice.seller.toString()))) {
+            const sellerInstance = await this._getCompany(ctx.stub, tempInvoice.seller.toString());
+            if (sellerInstance.status !== 'ACTIVE') {
+                throw new Error(`Error: The Seller having ID: ${tempInvoice.seller}, doesn't have ACTIVE Certification Status`);
+            }
+        }
+        else{
+            throw new Error(`Error: The provided Seller having ID: ${tempInvoice.seller}, is not registered.`);
+        }
+
 
         //Check Buyer Certificate Here
-        //[Coming Soon]
+        if (await this._doesStateExist(ctx.stub, this._createCompanyCompositKey(ctx.stub, tempInvoice.buyer.toString()))) {
+            const buyerInstance = await this._getCompany(ctx.stub, tempInvoice.buyer.toString());
+            if (buyerInstance.status !== 'ACTIVE') {
+                throw new Error(`Error: The Buyer having ID: ${tempInvoice.buyer}, doesn't have ACTIVE Certification Status`);
+            }
+        }
+        else {
+            throw new Error(`Error: The provided Buyer having ID: ${tempInvoice.buyer}, is not registered.`);
+        }
+
 
         //Object Creation from parameters
         const inv = Invoice.from({
