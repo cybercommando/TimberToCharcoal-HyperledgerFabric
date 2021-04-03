@@ -84,7 +84,7 @@ class BaseContract extends Contract {
 
         await iterator.close();
 
-        return this._toBuffer(allResults).toString();
+        return this._toBuffer(allResults);
     }
 
     async _doesStateExist(stub, compositeKey) {

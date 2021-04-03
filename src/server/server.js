@@ -8,6 +8,23 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+
+app.post('/api/initData', async function (req, res) {
+  try {
+    const contract = await fabricNetwork.connectNetwork('connection-certifiedCompanies.json', 'wallet/wallet-certifiedCompanies');
+    let tx = await contract.submitTransaction('LoadData');
+    res.json({
+      status: 'OK - Transaction has been submitted',
+      response: tx.toString()
+    });
+  } catch (error) {
+    console.error(`Failed to evaluate transaction: ${error}`);
+    res.status(500).json({
+      error: error
+    });
+  }
+});
+
 //==========================================/
 //Invoice Registration
 //==========================================/
