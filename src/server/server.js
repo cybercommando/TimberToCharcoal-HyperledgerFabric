@@ -35,6 +35,7 @@ app.post('/api/addInvoice', async function (req, res) {
     let inv = {
       invoiceId: req.body.invoiceId,
       productId: req.body.productId,
+      productLotNo: req.body.productLotNo,
       volumn: req.body.volumn,
       seller: req.body.seller,
       buyer: req.body.buyer,
