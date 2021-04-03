@@ -7,13 +7,31 @@
 const { BaseContract } = require('./Services/base-contract'),
     { Invoice } = require('./Models/Invoice'),
     { Company } = require('./Models/Company'),
-    events = require('./Services/events');
+    events = require('./Services/events'),
+    sampleData = require('./Repository/DataRepository');
 
 class CharcoalContract extends BaseContract {
     constructor() {
         super('com.timbertocharcoal.charcoalcontract');
     }
 
+    //Data Initialization
+    async LoadData(ctx) {
+        //Data for Companies
+        const companies = sampleData.CompanyData;
+        for (let i = 0; i < companies.length; i++) {
+            const comp = Company.from(companies[i]).toBuffer();
+            await ctx.stub.putState(this._createCompanyCompositKey(ctx.stub, companies[i].companyId.toString()), comp);
+        }
+
+        //Data for Invoices
+        const invoices = sampleData.InvoiceData;
+        for (let i = 0; i < invoices.length; i++) {
+            const inv = Invoice.from(invoices[i]).toBuffer();
+            await ctx.stub.putState(this._createInvoiceCompositKey(ctx.stub, invoices[i].invoiceId.toString()), inv);
+        }
+        return 'Sample Data initialized to the ledger';
+    }
 
     //==========================================/
     //Invoice Registration
@@ -26,6 +44,7 @@ class CharcoalContract extends BaseContract {
         this._requireCertifiedCompanies(ctx);
         this._require(tempInvoice.invoiceId.toString(), 'Invoice Id');
         this._require(tempInvoice.productId.toString(), 'Product Id');
+        this._require(tempInvoice.productLotNo.toString(), 'Product Lot No');
         this._require(tempInvoice.volumn.toString(), 'Volumn');
         this._require(tempInvoice.seller.toString(), 'Seller');
         this._require(tempInvoice.buyer.toString(), 'Buyer');
@@ -39,7 +58,7 @@ class CharcoalContract extends BaseContract {
                 throw new Error(`Error: The Seller having ID: ${tempInvoice.seller}, doesn't have ACTIVE Certification Status`);
             }
         }
-        else{
+        else {
             throw new Error(`Error: The provided Seller having ID: ${tempInvoice.seller}, is not registered.`);
         }
 
@@ -57,15 +76,7 @@ class CharcoalContract extends BaseContract {
 
 
         //Object Creation from parameters
-        const inv = Invoice.from({
-            invoiceId: tempInvoice.invoiceId.toString(),
-            productId: tempInvoice.productId.toString(),
-            volumn: tempInvoice.volumn.toString(),
-            seller: tempInvoice.seller.toString(),
-            buyer: tempInvoice.buyer.toString(),
-            date: tempInvoice.date.toString(),
-            invoiceHash: tempInvoice.invoiceHash.toString()
-        }).toBuffer();
+        const inv = Invoice.from(invoice).toBuffer();
 
         //Inserting Record in Ledger
         await ctx.stub.putState(this._createInvoiceCompositKey(ctx.stub, tempInvoice.invoiceId.toString()), inv);
@@ -123,12 +134,7 @@ class CharcoalContract extends BaseContract {
         this._require(tempCompany.conversionRate.toString(), 'Conversion Rate');
 
         //Object Creation from parameters
-        const comp = Company.from({
-            companyId: tempCompany.companyId.toString(),
-            name: tempCompany.name.toString(),
-            status: tempCompany.status.toString(),
-            conversionRate: tempCompany.conversionRate.toString()
-        }).toBuffer();
+        const comp = Company.from(company).toBuffer();
 
         //Inserting Record in Ledger
         await ctx.stub.putState(this._createCompanyCompositKey(ctx.stub, tempCompany.companyId.toString()), comp);
