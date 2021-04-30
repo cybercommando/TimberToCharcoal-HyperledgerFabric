@@ -18,11 +18,11 @@ curl --request POST \
 
 curl --request GET \
 --url 'http://localhost:3000/api/getAllCompanies' \
---header 'content-type: application/jason'
+--header 'content-type: application/json'
 
 curl --request GET \
 --url 'http://localhost:3000/api/getCompany/CC001' \
---header 'content-type: application/jason'
+--header 'content-type: application/json'
 
 curl --request PUT \
 --url http://localhost:3000/api/changeCompanyStatus \
@@ -50,4 +50,8 @@ curl --request POST \
 
 curl --request GET \
 --url 'http://localhost:3000/api/getInvoice/INV111' \
---header 'content-type: application/jason'
+--header 'content-type: application/json'
+
+curl --request GET \
+--url 'http://localhost:3000/api/getAllInvoices' \
+--header 'content-type: application/json'

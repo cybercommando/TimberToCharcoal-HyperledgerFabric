@@ -85,7 +85,14 @@ class CharcoalContract extends BaseContract {
     }
 
     async readInvoice(ctx, invoiceId) {
-        const iterator = await ctx.stub.getStateByPartialCompositeKey('invoice', [`${invoiceId}`]);
+        //Validation
+        this._require(invoiceId.toString(), 'Invoice Id');
+
+        return await this._getInvoice(ctx.stub, invoiceId.toString());
+    }
+
+    async readAllInvoices(ctx) {
+        const iterator = await ctx.stub.getStateByPartialCompositeKey('invoice', []);
 
         const allResults = [];
         let result;
@@ -94,29 +101,13 @@ class CharcoalContract extends BaseContract {
             result = await iterator.next();
 
             if (result.value && result.value.value.toString()) {
-                const jsonResult = {};
-
                 const splitCompositKey = ctx.stub.splitCompositeKey(result.value.key);
-                jsonResult.key = splitCompositKey.attributes[0];
-                jsonResult.value = result.value.value.buffer.toString('utf-8');
-
-                allResults.push(jsonResult);
+                allResults.push(await this._getInvoice(ctx.stub, splitCompositKey.attributes[0]));
             }
-
         }
         while (!result.done);
-
         await iterator.close();
-
-        return this._toBuffer(allResults).toString();
-        // if (!inv || inv.length === 0) {
-        //     throw new Error(`The invoice ${invoiceId} does not exist`);
-        // }
-        // return inv.toString();
-    }
-
-    async readAllInvoices(ctx) {
-        return await this._readAllStatesByPartialCompositKey(ctx.stub, 'invoice');
+        return allResults;
     }
 
 
@@ -154,7 +145,22 @@ class CharcoalContract extends BaseContract {
         //Validation
         this._requireCertifiers(ctx);
 
-        return await this._readAllStatesByPartialCompositKey(ctx.stub, 'company');
+        const iterator = await ctx.stub.getStateByPartialCompositeKey('company', []);
+
+        const allResults = [];
+        let result;
+
+        do {
+            result = await iterator.next();
+
+            if (result.value && result.value.value.toString()) {
+                const splitCompositKey = ctx.stub.splitCompositeKey(result.value.key);
+                allResults.push(await this._getCompany(ctx.stub, splitCompositKey.attributes[0]));
+            }
+        }
+        while (!result.done);
+        await iterator.close();
+        return allResults;
     }
 
     async changeStatus(ctx, companyId, status) {
