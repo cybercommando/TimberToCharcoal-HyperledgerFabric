@@ -215,22 +215,21 @@ app.put('/api/changeCompanyStatus', async function (req, res) {
 
 
 //==========================================/
-//Compare Aggregate
+//PerformAudit
 //==========================================/
-
-
-
-//==========================================/
-//Conversion Rate
-//==========================================/
-
-
-
-//==========================================/
-//Comparison
-//==========================================/
-
-
+app.get('/api/performAudit', async function (req, res) {
+  try {
+    const contract = await fabricNetwork.connectNetwork('connection-certifiers.json', 'wallet/wallet-certifiers');
+    const result = await contract.evaluateTransaction('PerformAudit');
+    let response = JSON.parse(result.toString());
+    res.json({ result: response });
+  } catch (error) {
+    console.error(`Failed to evaluate transaction: ${error}`);
+    res.status(500).json({
+      error: error
+    });
+  }
+});
 
 var serverObj = app.listen(3000, () => {
   console.log("***********************************");
