@@ -32,6 +32,10 @@ curl --request GET \
 --header 'content-type: application/json'
 
 curl --request GET \
+--url 'http://localhost:3000/api/readCompanyHistoricConversionRate/CC001' \
+--header 'content-type: application/json'
+
+curl --request GET \
 --url 'http://localhost:3000/api/getCompanyStatusHistory/CC001' \
 --header 'content-type: application/json'
 
