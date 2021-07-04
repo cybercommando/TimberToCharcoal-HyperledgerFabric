@@ -6,91 +6,106 @@ module.exports = {
             companyId: 'CC001',
             name: 'Company 001 - Producer',
             status: 'ACTIVE',
-            conversionRate: '100'
+            conversionRate: '100',
+            certifier:'C01'
         },
         {
             companyId: 'CC002',
             name: 'Company 002 - Producer',
             status: 'ACTIVE',
-            conversionRate: '100'
+            conversionRate: '100',
+            certifier:'C01'
         },
         {
             companyId: 'CC003',
             name: 'Company 003 - Producer',
             status: 'ACTIVE',
-            conversionRate: '100'
+            conversionRate: '100',
+            certifier:'C01'
         },
         {
             companyId: 'CC004',
             name: 'Company 004 - Producer',
             status: 'SUSPENDED',
-            conversionRate: '100'
+            conversionRate: '100',
+            certifier:'C01'
         },
         {
             companyId: 'CC005',
             name: 'Company 005 - Charcoal Processor',
             status: 'ACTIVE',
-            conversionRate: '20'
+            conversionRate: '20',
+            certifier:'C01'
         },
         {
             companyId: 'CC006',
             name: 'Company 006 - Charcoal Processor',
             status: 'ACTIVE',
-            conversionRate: '20'
+            conversionRate: '20',
+            certifier:'C01'
         },
         {
             companyId: 'CC007',
             name: 'Company 007 - Charcoal Processor',
             status: 'SUSPENDED',
-            conversionRate: '15'
+            conversionRate: '15',
+            certifier:'C01'
         },
         {
             companyId: 'CC008',
             name: 'Company 008 - Secondary Charcoal Processor',
             status: 'ACTIVE',
-            conversionRate: '80'
+            conversionRate: '80',
+            certifier:'C02'
         },
         {
             companyId: 'CC009',
             name: 'Company 009 - Secondary Charcoal Processor',
             status: 'ACTIVE',
-            conversionRate: '80'
+            conversionRate: '80',
+            certifier:'C02'
         },
         {
             companyId: 'CC010',
             name: 'Company 010 - Secondary Charcoal Processor',
             status: 'ACTIVE',
-            conversionRate: '80'
+            conversionRate: '80',
+            certifier:'C02'
         },
         {
             companyId: 'CC011',
             name: 'Company 011 - Secondary Charcoal Processor',
             status: 'SUSPENDED',
-            conversionRate: '65'
+            conversionRate: '65',
+            certifier:'C02'
         },
         {
             companyId: 'CC012',
             name: 'Company 012 - Broker',
             status: 'ACTIVE',
-            conversionRate: '100'
+            conversionRate: '100',
+            certifier:'C02'
         },
         {
             companyId: 'CC013',
             name: 'Company 013 - Broker',
             status: 'ACTIVE',
-            conversionRate: '100'
+            conversionRate: '100',
+            certifier:'C02'
         },
         {
             companyId: 'CC014',
             name: 'Company 014 - Broker',
             status: 'ACTIVE',
-            conversionRate: '100'
+            conversionRate: '100',
+            certifier:'C02'
         },
         {
             companyId: 'CC015',
             name: 'Company 015 - Retailer',
             status: 'ACTIVE',
-            conversionRate: '100'
+            conversionRate: '100',
+            certifier:'C02'
         }
     ],
     InvoiceData: [
@@ -336,6 +351,18 @@ module.exports = {
             buyer: 'CC015',
             date: '3/19/21',
             invoiceHash: 'Sample Hash'
+        }
+    ],
+    CertifierData:[
+        {
+            certifierId: 'C01',
+            certifierName: 'Certifier 01',
+            status: 'ACTIVE'
+        },
+        {
+            certifierId: 'C02',
+            certifierName: 'Certifier 02',
+            status: 'ACTIVE'
         }
     ]
 };

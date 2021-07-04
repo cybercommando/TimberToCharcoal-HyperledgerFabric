@@ -22,9 +22,21 @@ app.post('/api/initData', async function (req, res) {
         companyId: companies[i].companyId,
         name: companies[i].name,
         status: companies[i].status,
-        conversionRate: companies[i].conversionRate
+        conversionRate: companies[i].conversionRate,
+        certifier: companies[i].certifier
       };
       await contract1.submitTransaction('registerCompany', JSON.stringify(comp));
+    }
+
+    //Data for Certifiers
+    const certifiers = sampleData.CertifierData;
+    for (let i = 0; i < certifiers.length; i++) {
+      let crt = {
+        certifierId: certifiers[i].certifierId,
+        certifierName: certifiers[i].certifierName,
+        status: certifiers[i].status
+      };
+      await contract1.submitTransaction('registerCertifier', JSON.stringify(crt));
     }
 
     const contract2 = await fabricNetwork.connectNetwork('connection-certifiedCompanies.json', 'wallet/wallet-certifiedCompanies');
@@ -131,7 +143,7 @@ app.get('/api/getAllInvoices', async function (req, res) {
 //==========================================/
 //Certification
 //==========================================/
-
+//Companies
 app.post('/api/registerCompany', async function (req, res) {
   try {
     const contract = await fabricNetwork.connectNetwork('connection-certifiers.json', 'wallet/wallet-certifiers');
@@ -139,7 +151,8 @@ app.post('/api/registerCompany', async function (req, res) {
       companyId: req.body.companyId,
       name: req.body.name,
       status: req.body.status,
-      conversionRate: req.body.conversionRate
+      conversionRate: req.body.conversionRate,
+      certifier: req.body.certifier
     };
     let tx = await contract.submitTransaction('registerCompany', JSON.stringify(comp));
     res.json({
@@ -227,6 +240,72 @@ app.put('/api/changeCompanyStatus', async function (req, res) {
   }
 });
 
+//Certifiers
+app.post('/api/registerCertifier', async function (req, res) {
+  try {
+    const contract = await fabricNetwork.connectNetwork('connection-certifiers.json', 'wallet/wallet-certifiers');
+    let crt = {
+      certifierId: req.body.certifierId,
+      certifierName: req.body.certifierName,
+      status: req.body.status
+    };
+    let tx = await contract.submitTransaction('registerCertifier', JSON.stringify(crt));
+    res.json({
+      status: 'OK - Transaction has been submitted',
+      txid: tx.toString()
+    });
+  } catch (error) {
+    console.error(`Failed to evaluate transaction: ${error}`);
+    res.status(500).json({
+      error: error
+    });
+  }
+});
+
+app.get('/api/getAllCertifiers', async function (req, res) {
+  try {
+    const contract = await fabricNetwork.connectNetwork('connection-certifiers.json', 'wallet/wallet-certifiers');
+    const result = await contract.evaluateTransaction('readAllCertifiers');
+    let response = JSON.parse(result.toString());
+    res.json({ result: response });
+  } catch (error) {
+    console.error(`Failed to evaluate transaction: ${error}`);
+    res.status(500).json({
+      error: error
+    });
+  }
+});
+
+app.get('/api/getCertifier/:id', async function (req, res) {
+  try {
+    const contract = await fabricNetwork.connectNetwork('connection-certifiers.json', 'wallet/wallet-certifiers');
+    const result = await contract.evaluateTransaction('readCertifier', req.params.id.toString());
+    let response = JSON.parse(result.toString());
+    res.json({ result: response });
+  } catch (error) {
+    console.error(`Failed to evaluate transaction: ${error}`);
+    res.status(500).json({
+      error: error
+    });
+  }
+});
+
+app.put('/api/changeCertifierStatus', async function (req, res) {
+  try {
+    const contract = await fabricNetwork.connectNetwork('connection-certifiers.json', 'wallet/wallet-certifiers');
+
+    let tx = await contract.submitTransaction('changeCertifierStatus', req.body.certifierId, req.body.status);
+    res.json({
+      status: 'OK - Transaction has been submitted',
+      txid: tx.toString()
+    });
+  } catch (error) {
+    console.error(`Failed to evaluate transaction: ${error}`);
+    res.status(500).json({
+      error: error
+    });
+  }
+});
 
 //==========================================/
 //PerformAudit
