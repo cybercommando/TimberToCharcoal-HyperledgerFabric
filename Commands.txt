@@ -21,7 +21,7 @@ curl --request GET \
 curl --request POST \
 --url http://localhost:3000/api/registerCompany \
 --header 'content-type: application/json' \
---data '{ "companyId":"CC020", "name":"Company 020", "status":"SUSPENDED", "conversionRate":"80"}'
+--data '{ "companyId":"CC020", "name":"Company 020", "status":"SUSPENDED", "conversionRate":"80", "certifier":"C02"}'
 
 curl --request GET \
 --url 'http://localhost:3000/api/getAllCompanies' \
