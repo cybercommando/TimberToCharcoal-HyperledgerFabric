@@ -160,6 +160,24 @@ class CharcoalContract extends BaseContract {
         return await this._getCompany(ctx.stub, companyId.toString());
     }
 
+    async readCompanyHistoricConversionRate(ctx, companyId) {
+
+        //Validation
+        this._requireCertifiers(ctx);
+        this._require(companyId.toString(), 'Company Id');
+
+        let counter = 0;
+        let historicConversionRate = 0;
+
+        let companyHistory = await this.readCompanyHistory(ctx, companyId);
+        for (let i = 0; i < companyHistory.length; i++) {
+            counter++;
+            historicConversionRate += companyHistory[i].conversionRate;
+        }
+
+        return historicConversionRate / counter;
+    }
+
     async readAllCompanies(ctx) {
         //Validation
         this._requireCertifiers(ctx);
@@ -204,7 +222,7 @@ class CharcoalContract extends BaseContract {
         }
     }
 
-    async readCompanyStatusHistory(ctx, companyId) {
+    async readCompanyHistory(ctx, companyId) {
 
         //Validation
         this._requireCertifiers(ctx);
@@ -229,43 +247,105 @@ class CharcoalContract extends BaseContract {
         return allResults;
     }
 
-
     //==========================================/
-    //Compare Aggregate
+    //Audit
     //==========================================/
 
-    extractPurchasedVolumes(ctx, invoice) {
-        return 'extractPurchasedVolumes: Not Implemented Yet';
+    async PerformAudit(ctx) {
+        let FinalResult = [];
+        //Validation
+        this._requireCertifiers(ctx);
+
+        let Invoices = await this.readAllInvoices(ctx);
+        for (let i = 0; i < Invoices.length; i++) {
+            let InvoiceHistory = await this.readInvoiceHistory(ctx, Invoices[i].invoiceId);
+
+            //Holding Previous Invoice Volumn
+            let prevVolumn = 0;
+            for (let j = 0; j < InvoiceHistory.length; j++) {
+                const invoice = InvoiceHistory[j];
+                if (j === 0) {
+                    prevVolumn = invoice.volumn;
+                }
+                else {
+                    //==========================================/
+                    //Compare Aggregate Volumns
+                    //==========================================/
+                    let AggregateComparisonResult = await this.CompareAggregateVolumes(ctx, prevVolumn, invoice);
+
+                    //==========================================/
+                    //Conversion Rate
+                    //==========================================/
+                    let ConversionRateComparisonResult = await this.CompareConversionRate(ctx, prevVolumn, invoice);
+
+                    //==========================================/
+                    //Comparison
+                    //==========================================/
+                    let result = await this.ProcessComparisonResults(ctx, AggregateComparisonResult, ConversionRateComparisonResult);
+                    if (result) {
+                        FinalResult.push(invoice);
+                    }
+                    prevVolumn = invoice.volumn;
+                }
+                //FinalResult.push(invoice);
+            }
+        }
+        return FinalResult;
     }
 
-    calculateAggregateVolume(ctx, invoice) {
-        return 'calculateAggregateVolume: Not Implemented Yet';
+    //==========================================/
+    //Compare Aggregate Volumns
+    //==========================================/
+    async CompareAggregateVolumes(ctx, prevVolumn, invoice) {
+        //ExtractPurchasedVolumes
+        let purchasedVolumn = invoice.volumn;
+
+        //CalculateAggregateVolume
+        const seller = await this.readCompany(ctx, invoice.seller);
+        let aggregatedVolumn = (seller.conversionRate / 100) * prevVolumn;
+        if (purchasedVolumn > aggregatedVolumn) {
+            return true;
+        }
+        return false;
+    }
+
+    //==========================================/
+    //Compare Conversion Rate
+    //==========================================/
+    async CompareConversionRate(ctx, prevVolumn, invoice) {
+        //calculateImplicitConversionRate
+        let implicitCR = (invoice.volumn / prevVolumn) * 100;
+
+        //ExtractHistoricConversionRate
+        let historicCR = await this.readCompanyHistoricConversionRate(ctx, invoice.seller);
+
+        //DeviationCheck
+        let Deviation = 0;
+        const comp = await this.readCompany(ctx, invoice.seller);
+        if (comp.conversionRate <= 50) {
+            Deviation = 2;
+        } else {
+            Deviation = 5;
+        }
+
+        //CompareConversionRate
+        if ((Math.abs(historicCR - implicitCR) > Deviation)) {
+            return true;
+        }
+
+        return false;
     }
 
 
     //==========================================/
-    //Conversion Rate
+    //Process Comparison Results
     //==========================================/
 
-    calculateImplicitCR(ctx) {
-        return 'calculateImplicitCR: Not Implemented Yet';
-    }
-
-    extractHistoricCR(ctx) {
-        return 'extractHistoricCR: Not Implemented Yet';
-    }
-
-    CompareCR(ctx) {
-        return 'CompareCR: Not Implemented Yet';
-    }
-
-
-    //==========================================/
-    //Comparison
-    //==========================================/
-
-    compareResults(ctx, AggVolume, CR) {
-        return 'compareResults: Not Implemented Yet';
+    async ProcessComparisonResults(ctx, AggVolume, CR) {
+        if (AggVolume || CR) {
+            return true;
+        }
+        return false;
     }
 }
 
