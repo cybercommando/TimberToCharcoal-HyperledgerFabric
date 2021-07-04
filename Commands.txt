@@ -28,21 +28,21 @@ curl --request GET \
 --header 'content-type: application/json'
 
 curl --request GET \
---url 'http://localhost:3000/api/getCompany/CC001' \
+--url 'http://localhost:3000/api/getCompany/CC020' \
 --header 'content-type: application/json'
 
 curl --request GET \
---url 'http://localhost:3000/api/readCompanyHistoricConversionRate/CC001' \
---header 'content-type: application/json'
-
-curl --request GET \
---url 'http://localhost:3000/api/getCompanyStatusHistory/CC001' \
+--url 'http://localhost:3000/api/readCompanyHistoricConversionRate/CC020' \
 --header 'content-type: application/json'
 
 curl --request PUT \
 --url http://localhost:3000/api/changeCompanyStatus \
 --header 'content-type: application/json' \
 --data '{ "companyId":"CC020", "status":"ACTIVE"}'
+
+curl --request GET \
+--url 'http://localhost:3000/api/getCompanyHistory/CC020' \
+--header 'content-type: application/json'
 
 //=====================================
 // For Invoices
@@ -64,7 +64,7 @@ curl --request POST \
 --data '{ "invoiceId":"INV10", "productId":"Timber Wood", "volumn":"2000", "buyer":"CC007", "seller":"CC003", "date":"03/31/2021", "invoiceHash":"some temporary hash"}'
 
 curl --request GET \
---url 'http://localhost:3000/api/getInvoice/INV01' \
+--url 'http://localhost:3000/api/getInvoice/INV11' \
 --header 'content-type: application/json'
 
 curl --request GET \

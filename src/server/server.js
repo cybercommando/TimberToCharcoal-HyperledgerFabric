@@ -196,10 +196,10 @@ app.get('/api/readCompanyHistoricConversionRate/:id', async function (req, res) 
   }
 });
 
-app.get('/api/getCompanyStatusHistory/:id', async function (req, res) {
+app.get('/api/getCompanyHistory/:id', async function (req, res) {
   try {
     const contract = await fabricNetwork.connectNetwork('connection-certifiers.json', 'wallet/wallet-certifiers');
-    const result = await contract.evaluateTransaction('readCompanyStatusHistory', req.params.id.toString());
+    const result = await contract.evaluateTransaction('readCompanyHistory', req.params.id.toString());
     let response = JSON.parse(result.toString());
     res.json({ result: response });
   } catch (error) {
