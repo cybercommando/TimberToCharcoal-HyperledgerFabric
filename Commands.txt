@@ -40,20 +40,24 @@ curl --request PUT \
 curl --request POST \
 --url http://localhost:3000/api/addInvoice \
 --header 'content-type: application/json' \
---data '{ "invoiceId":"INV111", "productId":"10002", "productLotNo":"LOT1100", "volumn":"1000", "buyer":"CC005", "seller":"CC001", "date":"12/12/2021", "invoiceHash":"some temporary hash"}'
+--data '{ "invoiceId":"INV11", "productId":"10002", "volumn":"1000", "buyer":"CC005", "seller":"CC001", "date":"12/12/2021", "invoiceHash":"some temporary hash"}'
 
 curl --request POST \
 --url http://localhost:3000/api/addInvoice \
 --header 'content-type: application/json' \
---data '{ "invoiceId":"INV091", "productId":"Timber Wood", "productLotNo":"LOT0900", "volumn":"2000", "buyer":"CC007", "seller":"CC004", "date":"03/23/2021", "invoiceHash":"some temporary hash"}'
+--data '{ "invoiceId":"INV09", "productId":"Timber Wood", "volumn":"2000", "buyer":"CC007", "seller":"CC004", "date":"03/23/2021", "invoiceHash":"some temporary hash"}'
 
 curl --request POST \
 --url http://localhost:3000/api/addInvoice \
 --header 'content-type: application/json' \
---data '{ "invoiceId":"INV101", "productId":"Timber Wood", "productLotNo":"LOT1000", "volumn":"2000", "buyer":"CC007", "seller":"CC003", "date":"03/31/2021", "invoiceHash":"some temporary hash"}'
+--data '{ "invoiceId":"INV10", "productId":"Timber Wood", "volumn":"2000", "buyer":"CC007", "seller":"CC003", "date":"03/31/2021", "invoiceHash":"some temporary hash"}'
 
 curl --request GET \
---url 'http://localhost:3000/api/getInvoice/INV111' \
+--url 'http://localhost:3000/api/getInvoice/INV01' \
+--header 'content-type: application/json'
+
+curl --request GET \
+--url 'http://localhost:3000/api/getInvoiceHistory/INV01' \
 --header 'content-type: application/json'
 
 curl --request GET \

@@ -7,30 +7,11 @@
 const { BaseContract } = require('./Services/base-contract'),
     { Invoice } = require('./Models/Invoice'),
     { Company } = require('./Models/Company'),
-    events = require('./Services/events'),
-    sampleData = require('./Repository/DataRepository');
+    events = require('./Services/events');
 
 class CharcoalContract extends BaseContract {
     constructor() {
         super('com.timbertocharcoal.charcoalcontract');
-    }
-
-    //Data Initialization
-    async LoadData(ctx) {
-        //Data for Companies
-        const companies = sampleData.CompanyData;
-        for (let i = 0; i < companies.length; i++) {
-            const comp = Company.from(companies[i]).toBuffer();
-            await ctx.stub.putState(this._createCompanyCompositKey(ctx.stub, companies[i].companyId.toString()), comp);
-        }
-
-        //Data for Invoices
-        const invoices = sampleData.InvoiceData;
-        for (let i = 0; i < invoices.length; i++) {
-            const inv = Invoice.from(invoices[i]).toBuffer();
-            await ctx.stub.putState(this._createInvoiceCompositKey(ctx.stub, invoices[i].invoiceId.toString()), inv);
-        }
-        return 'Sample Data initialized to the ledger';
     }
 
     //==========================================/
@@ -44,7 +25,6 @@ class CharcoalContract extends BaseContract {
         this._requireCertifiedCompanies(ctx);
         this._require(tempInvoice.invoiceId.toString(), 'Invoice Id');
         this._require(tempInvoice.productId.toString(), 'Product Id');
-        this._require(tempInvoice.productLotNo.toString(), 'Product Lot No');
         this._require(tempInvoice.volumn.toString(), 'Volumn');
         this._require(tempInvoice.seller.toString(), 'Seller');
         this._require(tempInvoice.buyer.toString(), 'Buyer');
@@ -74,13 +54,27 @@ class CharcoalContract extends BaseContract {
             throw new Error(`Error: The provided Buyer having ID: ${tempInvoice.buyer}, is not registered.`);
         }
 
+        if (await this._doesStateExist(ctx.stub, this._createInvoiceCompositKey(ctx.stub, tempInvoice.invoiceId.toString()))) {
+            //Update Existing State
+            const existingInvoice = await this._getInvoice(ctx.stub, tempInvoice.invoiceId.toString());
+            existingInvoice.productId = tempInvoice.productId.toString();
+            existingInvoice.volumn = tempInvoice.volumn.toString();
+            existingInvoice.seller = tempInvoice.seller.toString();
+            existingInvoice.buyer = tempInvoice.buyer.toString();
+            existingInvoice.date = tempInvoice.date.toString();
+            existingInvoice.invoiceHash = tempInvoice.invoiceHash.toString();
 
-        //Object Creation from parameters
-        const inv = Invoice.from(invoice).toBuffer();
+            await ctx.stub.putState(this._createInvoiceCompositKey(ctx.stub, tempInvoice.invoiceId.toString()), existingInvoice.toBuffer());
+            ctx.stub.setEvent(events.InvoiceUpdated, existingInvoice.toBuffer());
+        }
+        else {
+            //Object Creation from parameters
+            const inv = Invoice.from(tempInvoice).toBuffer();
 
-        //Inserting Record in Ledger
-        await ctx.stub.putState(this._createInvoiceCompositKey(ctx.stub, tempInvoice.invoiceId.toString()), inv);
-        ctx.stub.setEvent(events.InvoiceInserted, inv);
+            //Inserting Record in Ledger
+            await ctx.stub.putState(this._createInvoiceCompositKey(ctx.stub, tempInvoice.invoiceId.toString()), inv);
+            ctx.stub.setEvent(events.InvoiceInserted, inv);
+        }
         return ctx.stub.getTxID();
     }
 
@@ -89,6 +83,31 @@ class CharcoalContract extends BaseContract {
         this._require(invoiceId.toString(), 'Invoice Id');
 
         return await this._getInvoice(ctx.stub, invoiceId.toString());
+    }
+
+    async readInvoiceHistory(ctx, invoiceId) {
+
+        //Validation
+        this._requireCertifiers(ctx);
+        this._require(invoiceId.toString(), 'Invoice Id');
+
+        let iterator = await ctx.stub.getHistoryForKey(this._createInvoiceCompositKey(ctx.stub, invoiceId.toString()));
+
+        const allResults = [];
+        let result;
+
+        do {
+            result = await iterator.next();
+
+            if (result.value && result.value.value.toString()) {
+                const obj = JSON.parse(result.value.value.toString('utf8'));
+                allResults.push(obj);
+            }
+        }
+        while (!result.done);
+
+        await iterator.close();
+        return allResults;
     }
 
     async readAllInvoices(ctx) {
@@ -125,7 +144,7 @@ class CharcoalContract extends BaseContract {
         this._require(tempCompany.conversionRate.toString(), 'Conversion Rate');
 
         //Object Creation from parameters
-        const comp = Company.from(company).toBuffer();
+        const comp = Company.from(tempCompany).toBuffer();
 
         //Inserting Record in Ledger
         await ctx.stub.putState(this._createCompanyCompositKey(ctx.stub, tempCompany.companyId.toString()), comp);
@@ -186,19 +205,28 @@ class CharcoalContract extends BaseContract {
     }
 
     async readCompanyStatusHistory(ctx, companyId) {
+
+        //Validation
+        this._requireCertifiers(ctx);
+        this._require(companyId.toString(), 'Company Id');
+
         let iterator = await ctx.stub.getHistoryForKey(this._createCompanyCompositKey(ctx.stub, companyId.toString()));
-        let result = [];
-        let res = await iterator.next();
-        while (!res.done) {
-            if (res.value) {
-                console.info(`found state update with value: ${res.value.value.toString('utf8')}`);
-                const obj = JSON.parse(res.value.value.toString('utf8'));
-                result.push(obj);
+
+        const allResults = [];
+        let result;
+
+        do {
+            result = await iterator.next();
+
+            if (result.value && result.value.value.toString()) {
+                const obj = JSON.parse(result.value.value.toString('utf8'));
+                allResults.push(obj);
             }
-            res = await iterator.next();
         }
+        while (!result.done);
+
         await iterator.close();
-        return result;
+        return allResults;
     }
 
 

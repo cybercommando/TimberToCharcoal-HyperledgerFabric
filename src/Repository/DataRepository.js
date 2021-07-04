@@ -95,8 +95,7 @@ module.exports = {
     ],
     InvoiceData: [
         {
-            productLotNo: 'LOT0100',
-            invoiceId: 'INV011',
+            invoiceId: 'INV01',
             productId: 'Timber Wood',
             volumn: '1000',
             seller: 'CC001',
@@ -105,38 +104,34 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0100',
-            invoiceId: 'INV013',
+            invoiceId: 'INV01',
             productId: 'Charcoal Package 1',
-            volumn: '200',
+            volumn: '190',
             seller: 'CC005',
             buyer: 'CC008',
             date: '1/5/21',
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0100',
-            invoiceId: 'INV015',
+            invoiceId: 'INV01',
             productId: 'Charcoal Package 2',
-            volumn: '160',
+            volumn: '152',
             seller: 'CC008',
             buyer: 'CC014',
             date: '1/5/21',
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0100',
-            invoiceId: 'INV016',
+            invoiceId: 'INV01',
             productId: 'Charcoal Package 2',
-            volumn: '160',
+            volumn: '152',
             seller: 'CC014',
             buyer: 'CC015',
             date: '1/8/21',
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0200',
-            invoiceId: 'INV021',
+            invoiceId: 'INV02',
             productId: 'Timber Wood',
             volumn: '1000',
             seller: 'CC001',
@@ -145,8 +140,7 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0200',
-            invoiceId: 'INV023',
+            invoiceId: 'INV02',
             productId: 'Charcoal Package 1',
             volumn: '200',
             seller: 'CC005',
@@ -155,18 +149,16 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0200',
-            invoiceId: 'INV025',
+            invoiceId: 'INV02',
             productId: 'Charcoal Package 2',
-            volumn: '160',
+            volumn: '158',
             seller: 'CC008',
             buyer: 'CC015',
             date: '1/15/21',
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0300',
-            invoiceId: 'INV031',
+            invoiceId: 'INV03',
             productId: 'Timber Wood',
             volumn: '1000',
             seller: 'CC001',
@@ -175,8 +167,7 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0300',
-            invoiceId: 'INV033',
+            invoiceId: 'INV03',
             productId: 'Charcoal Package 1',
             volumn: '200',
             seller: 'CC006',
@@ -185,8 +176,7 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0300',
-            invoiceId: 'INV034',
+            invoiceId: 'INV03',
             productId: 'Charcoal Package 1',
             volumn: '200',
             seller: 'CC013',
@@ -195,18 +185,16 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0300',
-            invoiceId: 'INV035',
+            invoiceId: 'INV03',
             productId: 'Charcoal Package 2',
-            volumn: '160',
+            volumn: '154',
             seller: 'CC009',
             buyer: 'CC015',
             date: '1/20/21',
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0400',
-            invoiceId: 'INV041',
+            invoiceId: 'INV04',
             productId: 'Timber Wood',
             volumn: '1000',
             seller: 'CC002',
@@ -215,8 +203,7 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0400',
-            invoiceId: 'INV043',
+            invoiceId: 'INV04',
             productId: 'Charcoal Package 1',
             volumn: '200',
             seller: 'CC006',
@@ -225,18 +212,16 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0400',
-            invoiceId: 'INV045',
+            invoiceId: 'INV04',
             productId: 'Charcoal Package 2',
-            volumn: '160',
+            volumn: '152',
             seller: 'CC008',
             buyer: 'CC015',
             date: '1/27/21',
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0500',
-            invoiceId: 'INV051',
+            invoiceId: 'INV05',
             productId: 'Timber Wood',
             volumn: '500',
             seller: 'CC002',
@@ -245,8 +230,7 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0500',
-            invoiceId: 'INV052',
+            invoiceId: 'INV05',
             productId: 'Timber Wood',
             volumn: '500',
             seller: 'CC012',
@@ -255,28 +239,25 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0500',
-            invoiceId: 'INV053',
+            invoiceId: 'INV05',
             productId: 'Charcoal Package 1',
-            volumn: '100',
+            volumn: '95',
             seller: 'CC006',
             buyer: 'CC009',
             date: '2/11/21',
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0500',
-            invoiceId: 'INV055',
+            invoiceId: 'INV05',
             productId: 'Charcoal Package 2',
-            volumn: '80',
+            volumn: '76',
             seller: 'CC009',
             buyer: 'CC015',
             date: '2/12/21',
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0600',
-            invoiceId: 'INV061',
+            invoiceId: 'INV06',
             productId: 'Timber Wood',
             volumn: '500',
             seller: 'CC002',
@@ -285,8 +266,7 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0600',
-            invoiceId: 'INV063',
+            invoiceId: 'INV06',
             productId: 'Charcoal Package 1',
             volumn: '100',
             seller: 'CC005',
@@ -295,8 +275,7 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0600',
-            invoiceId: 'INV065',
+            invoiceId: 'INV06',
             productId: 'Charcoal Package 2',
             volumn: '80',
             seller: 'CC008',
@@ -305,8 +284,7 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0700',
-            invoiceId: 'INV071',
+            invoiceId: 'INV07',
             productId: 'Timber Wood',
             volumn: '500',
             seller: 'CC003',
@@ -315,8 +293,7 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0700',
-            invoiceId: 'INV073',
+            invoiceId: 'INV07',
             productId: 'Charcoal Package 1',
             volumn: '100',
             seller: 'CC006',
@@ -325,18 +302,16 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0700',
-            invoiceId: 'INV075',
+            invoiceId: 'INV07',
             productId: 'Charcoal Package 2',
-            volumn: '80',
+            volumn: '110',
             seller: 'CC009',
             buyer: 'CC015',
             date: '3/12/21',
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0800',
-            invoiceId: 'INV081',
+            invoiceId: 'INV08',
             productId: 'Timber Wood',
             volumn: '500',
             seller: 'CC003',
@@ -345,8 +320,7 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0800',
-            invoiceId: 'INV083',
+            invoiceId: 'INV08',
             productId: 'Charcoal Package 1',
             volumn: '100',
             seller: 'CC005',
@@ -355,8 +329,7 @@ module.exports = {
             invoiceHash: 'Sample Hash'
         },
         {
-            productLotNo: 'LOT0800',
-            invoiceId: 'INV085',
+            invoiceId: 'INV08',
             productId: 'Charcoal Package 2',
             volumn: '65',
             seller: 'CC010',
