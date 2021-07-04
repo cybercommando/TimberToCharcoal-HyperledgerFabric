@@ -4,6 +4,7 @@
 
 'use strict';
 
+const { Certifier } = require('./Models/Certifier');
 const { BaseContract } = require('./Services/base-contract'),
     { Invoice } = require('./Models/Invoice'),
     { Company } = require('./Models/Company'),
@@ -133,6 +134,8 @@ class CharcoalContract extends BaseContract {
     //==========================================/
     //Certification
     //==========================================/
+    //Certified Companies
+    //------------------------------------------/
     async registerCompany(ctx, company) {
         const tempCompany = JSON.parse(company);
 
@@ -245,6 +248,79 @@ class CharcoalContract extends BaseContract {
 
         await iterator.close();
         return allResults;
+    }
+
+    //------------------------------------------/
+    //Certifier
+    //------------------------------------------/
+    async registerCertifier(ctx, certifier) {
+        const tempCertifier = JSON.parse(certifier);
+
+        //Validation
+        this._requireCertifiers(ctx);
+        this._require(tempCertifier.certifierId.toString(), 'Certifier Id');
+        this._require(tempCertifier.certifierName.toString(), 'Certifier Name');
+        this._require(tempCertifier.status.toString(), 'Certifier Status');
+
+        //Object Creation from parameters
+        const crt = Certifier.from(tempCertifier).toBuffer();
+
+        //Inserting Record in Ledger
+        await ctx.stub.putState(this._createCertifierCompositKey(ctx.stub, tempCertifier.certifierId.toString()), crt);
+        ctx.stub.setEvent(events.CertifierInserted, crt);
+        return ctx.stub.getTxID();
+    }
+
+    async readCertifier(ctx, certifierId) {
+        //Validation
+        this._requireCertifiers(ctx);
+        this._require(certifierId.toString(), 'Certifier Id');
+
+        return await this._getCertifier(ctx.stub, certifierId.toString());
+    }
+
+    async readAllCertifiers(ctx) {
+        //Validation
+        this._requireCertifiers(ctx);
+
+        const iterator = await ctx.stub.getStateByPartialCompositeKey('certifier', []);
+
+        const allResults = [];
+        let result;
+
+        do {
+            result = await iterator.next();
+
+            if (result.value && result.value.value.toString()) {
+                const obj = JSON.parse(result.value.value.toString('utf8'));
+                allResults.push(obj);
+            }
+        }
+        while (!result.done);
+        await iterator.close();
+        return allResults;
+    }
+
+    async changeCertifierStatus(ctx, certifierId, status) {
+        //Validation
+        this._requireCertifiers(ctx);
+        this._require(certifierId.toString(), 'Certifier Id');
+        this._require(status.toString(), 'Status');
+
+        if (status.toString() === 'ACTIVE' || status.toString() === 'INACTIVE') {
+            const certifierInstance = await this._getCertifier(ctx.stub, certifierId);
+
+            certifierInstance.status = status;
+
+            await ctx.stub.putState(this._createCertifierCompositKey(ctx.stub, certifierId), certifierInstance.toBuffer());
+
+            ctx.stub.setEvent(events.CertifierStatusChanged, certifierInstance.toBuffer());
+
+            return ctx.stub.getTxID();
+        }
+        else {
+            throw new Error(`Error: The provided Status: ${status}, is not valid`);
+        }
     }
 
     //==========================================/

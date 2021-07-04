@@ -3,7 +3,8 @@
 class Certifier {
     constructor() {
         this.certifierId = '';
-        this.name = '';
+        this.certifierName = '';
+        this.status = '';
     }
 
     static from(bufferOrJson) {
