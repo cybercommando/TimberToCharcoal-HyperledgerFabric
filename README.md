@@ -35,9 +35,8 @@ https://hyperledger-fabric.readthedocs.io/en/release-1.4/prereqs.html
 
 # API Configuration
 
-//=====================================
-## Initialization of Sample Data
-//=====================================
+
+### Initialization of Sample Data
 
 > It is compulsory to initialize the sample data first, to play with.
 ```
@@ -46,9 +45,7 @@ curl --request POST \
 --header 'content-type: application/json'
 ```
 
-//=====================================
-## To Perform Audit
-//=====================================
+### To Perform Audit
 
 ```
 curl --request GET \
@@ -56,9 +53,7 @@ curl --request GET \
 --header 'content-type: application/json'
 ```
 
-//=====================================
-## For Companies
-//=====================================
+### For Companies
 
 ```
 curl --request POST \
@@ -98,9 +93,7 @@ curl --request GET \
 --header 'content-type: application/json'
 ```
 
-//=====================================
-## For Certifiers
-//=====================================
+### For Certifiers
 
 ```
 curl --request POST \
@@ -128,9 +121,7 @@ curl --request PUT \
 --data '{ "certifierId":"C03", "status":"ACTIVE"}'
 ```
 
-//=====================================
 ## For Invoices
-//=====================================
 
 ```
 curl --request POST \
@@ -171,9 +162,7 @@ curl --request GET \
 --header 'content-type: application/json'
 ```
 
-//=====================================
-## Notifications
-//=====================================
+### Notifications
 
 ```
 curl --request POST \
@@ -227,9 +216,7 @@ curl --request GET \
 --header 'content-type: application/json'
 ```
 
-//=====================================
-## Notification for Fraudulent Behaviour
-//=====================================
+### Notification for Fraudulent Behaviour
 
 ```
 curl --request POST \
