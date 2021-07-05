@@ -5,6 +5,7 @@
 'use strict';
 
 const { Certifier } = require('./Models/Certifier');
+const { Notification } = require('./Models/Notification');
 const { BaseContract } = require('./Services/base-contract'),
     { Invoice } = require('./Models/Invoice'),
     { Company } = require('./Models/Company'),
@@ -226,6 +227,24 @@ class CharcoalContract extends BaseContract {
         }
     }
 
+    async changeConversionRate(ctx, companyId, conversionRate) {
+        //Validation
+        this._requireCertifiers(ctx);
+        this._require(companyId.toString(), 'Company Id');
+        this._require(conversionRate.toString(), 'Conversion Rate');
+
+
+        const companyInstance = await this._getCompany(ctx.stub, companyId);
+
+        companyInstance.conversionRate = conversionRate.toString();
+
+        await ctx.stub.putState(this._createCompanyCompositKey(ctx.stub, companyId), companyInstance.toBuffer());
+
+        ctx.stub.setEvent(events.CompanyConversionRateChanged, companyInstance.toBuffer());
+
+        return ctx.stub.getTxID();
+    }
+
     async readCompanyHistory(ctx, companyId) {
 
         //Validation
@@ -361,6 +380,17 @@ class CharcoalContract extends BaseContract {
                     let result = await this.ProcessComparisonResults(ctx, AggregateComparisonResult, ConversionRateComparisonResult);
                     if (result) {
                         FinalResult.push(invoice);
+
+                        //Creating Notification
+                        // let ntf = {
+                        //     notificationId : '',
+                        //     certifierId : '',
+                        //     certifiedCompanyId : '',
+                        //     notificationType : '',
+                        //     comments : '',
+                        //     status : '',
+                        //     newConversionRate : ''
+                        // };
                     }
                     prevVolumn = invoice.volumn;
                 }
@@ -423,6 +453,154 @@ class CharcoalContract extends BaseContract {
             return true;
         }
         return false;
+    }
+
+    //==========================================/
+    //Notifications
+    //==========================================/
+    async createNotification(ctx, notification) {
+        const tempNotification = JSON.parse(notification);
+
+        //Validation
+        this._require(tempNotification.notificationId.toString(), 'Notification Id');
+        this._require(tempNotification.certifierId.toString(), 'Certifier Id');
+        this._require(tempNotification.certifiedCompanyId.toString(), 'Certified Company Id');
+        this._require(tempNotification.notificationType.toString(), 'Notification Type');
+        this._require(tempNotification.comments.toString(), 'Comments');
+        this._require(tempNotification.status.toString(), 'Status');
+
+        if (tempNotification.notificationType.toString() === 'CONVERSIONRATECHANGE') {
+            this._require(tempNotification.newConversionRate.toString(), 'New Conversion Rate');
+        }
+
+        //Object Creation from parameters
+        const ntf = Notification.from(tempNotification).toBuffer();
+
+        //Inserting Record in Ledger
+        await ctx.stub.putState(this._createNotificationCompositKey(ctx.stub, tempNotification.notificationId.toString()), ntf);
+        ctx.stub.setEvent(events.NotificationCreated, ntf);
+        return ctx.stub.getTxID();
+    }
+
+    async resolveNotification(ctx, notificationId, certifierId, status) {
+        //Validation
+        this._requireCertifiers(ctx);
+        this._require(notificationId.toString(), 'Notification Id');
+        this._require(certifierId.toString(), 'Certifier Id');
+        this._require(status.toString(), 'Status');
+
+        if (status.toString() === 'APPROVED') {
+            const NotificationInstance = await this._getNotification(ctx.stub, notificationId);
+            if (NotificationInstance.notificationType === 'FRAUDULENTBEHAVIOUR') {
+                await this.changeStatus(ctx, NotificationInstance.certifiedCompanyId, 'SUSPENDED');
+
+                NotificationInstance.status = status.toString();
+                await ctx.stub.putState(this._createNotificationCompositKey(ctx.stub, notificationId), NotificationInstance.toBuffer());
+                ctx.stub.setEvent(events.NotificationResolved, NotificationInstance.toBuffer());
+                return ctx.stub.getTxID();
+
+            }
+            else if (NotificationInstance.notificationType === 'CONVERSIONRATECHANGE') {
+                await this.changeConversionRate(ctx, NotificationInstance.certifiedCompanyId, NotificationInstance.newConversionRate);
+
+                NotificationInstance.status = status.toString();
+                await ctx.stub.putState(this._createNotificationCompositKey(ctx.stub, notificationId), NotificationInstance.toBuffer());
+                ctx.stub.setEvent(events.NotificationResolved, NotificationInstance.toBuffer());
+                return ctx.stub.getTxID();
+            }
+            else {
+                throw new Error(`Error: The Notification Type: ${NotificationInstance.notificationType}, is not valid`);
+            }
+        }
+        else if (status.toString() === 'DECLINED') {
+            const NotificationInstance = await this._getNotification(ctx.stub, notificationId);
+            NotificationInstance.status = status.toString();
+            await ctx.stub.putState(this._createNotificationCompositKey(ctx.stub, notificationId), NotificationInstance.toBuffer());
+            ctx.stub.setEvent(events.NotificationResolved, NotificationInstance.toBuffer());
+            return ctx.stub.getTxID();
+        }
+        else {
+            throw new Error(`Error: The provided Status: ${status}, is not valid`);
+        }
+    }
+
+    async readAllNotifications(ctx) {
+        //Validation
+        this._requireCertifiers(ctx);
+
+        const iterator = await ctx.stub.getStateByPartialCompositeKey('notification', []);
+
+        const allResults = [];
+        let result;
+
+        do {
+            result = await iterator.next();
+
+            if (result.value && result.value.value.toString()) {
+                const obj = JSON.parse(result.value.value.toString('utf8'));
+                allResults.push(obj);
+            }
+        }
+        while (!result.done);
+        await iterator.close();
+        return allResults;
+    }
+
+    async readNotification(ctx, notificationId) {
+        //Validation
+        this._requireCertifiers(ctx);
+        this._require(notificationId.toString(), 'Notification Id');
+
+        return await this._getNotification(ctx.stub, notificationId.toString());
+    }
+
+    async readNotificationHistory(ctx, notificationId) {
+        //Validation
+        this._requireCertifiers(ctx);
+        this._require(notificationId.toString(), 'Notification Id');
+
+        let iterator = await ctx.stub.getHistoryForKey(this._createNotificationCompositKey(ctx.stub, notificationId.toString()));
+
+        const allResults = [];
+        let result;
+
+        do {
+            result = await iterator.next();
+
+            if (result.value && result.value.value.toString()) {
+                const obj = JSON.parse(result.value.value.toString('utf8'));
+                allResults.push(obj);
+            }
+        }
+        while (!result.done);
+
+        await iterator.close();
+        return allResults;
+    }
+
+    async readNotificationsByCertifierId(ctx, certifierId) {
+        //Validation
+        this._requireCertifiers(ctx);
+        this._require(certifierId.toString(), 'Certifier Id');
+
+        const iterator = await ctx.stub.getStateByPartialCompositeKey('notification', []);
+
+        const allResults = [];
+        let result;
+
+        do {
+            result = await iterator.next();
+
+            if (result.value && result.value.value.toString()) {
+                const obj = JSON.parse(result.value.value.toString('utf8'));
+                if (obj.certifierId === certifierId.toString()) {
+                    allResults.push(obj);
+                }
+            }
+        }
+        while (!result.done);
+        await iterator.close();
+        return allResults;
     }
 }
 
