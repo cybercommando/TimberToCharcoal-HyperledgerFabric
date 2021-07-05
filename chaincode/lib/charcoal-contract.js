@@ -381,16 +381,26 @@ class CharcoalContract extends BaseContract {
                     if (result) {
                         FinalResult.push(invoice);
 
-                        //Creating Notification
+                        // //Creating Notification
+                        // let comp = await this.readCompany(ctx, invoice.seller);
+                        // let allNotifications = await this.readAllNotifications(ctx);
+                        // let notificationCount = allNotifications.length + 1;
                         // let ntf = {
-                        //     notificationId : '',
-                        //     certifierId : '',
-                        //     certifiedCompanyId : '',
-                        //     notificationType : '',
-                        //     comments : '',
-                        //     status : '',
-                        //     newConversionRate : ''
+                        //     notificationId: notificationCount.toString(),
+                        //     certifierId: comp.certifier.toString(),
+                        //     certifiedCompanyId: invoice.seller.toString(),
+                        //     notificationType: 'FRAUDULENTBEHAVIOUR',
+                        //     comments: 'Detected as a fraudulent Behaviour',
+                        //     status: 'PENDING'
                         // };
+                        // //await this.createNotification(ctx, JSON.stringify(ntf));
+
+                        // //Object Creation from parameters
+                        // const ntfObj = Notification.from(ntf).toBuffer();
+
+                        // //Inserting Record in Ledger
+                        // await ctx.stub.putState(this._createNotificationCompositKey(ctx.stub, ntf.notificationId.toString()), ntfObj);
+                        // ctx.stub.setEvent(events.NotificationCreated, ntfObj);
                     }
                     prevVolumn = invoice.volumn;
                 }
