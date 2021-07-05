@@ -95,3 +95,44 @@ curl --request GET \
 curl --request GET \
 --url 'http://localhost:3000/api/getAllInvoices' \
 --header 'content-type: application/json'
+
+
+//=====================================
+// Notifications
+//=====================================
+
+curl --request POST \
+--url http://localhost:3000/api/createNotification \
+--header 'content-type: application/json' \
+--data '{ "notificationId":"N0001", "certifierId":"C01", "certifiedCompanyId":"CC001", "notificationType":"CONVERSIONRATECHANGE", "comments":"Kindly Change this conversion rate with the old one", "status":"PENDING", "newConversionRate":"99"}'
+
+curl --request POST \
+--url http://localhost:3000/api/createNotification \
+--header 'content-type: application/json' \
+--data '{ "notificationId":"N0002", "certifierId":"C02", "certifiedCompanyId":"CC015", "notificationType":"CONVERSIONRATECHANGE", "comments":"Kindly Change this conversion rate with the old one", "status":"PENDING", "newConversionRate":"95"}'
+
+curl --request PUT \
+--url http://localhost:3000/api/resolveNotification \
+--header 'content-type: application/json' \
+--data '{ "notificationId":"N0001", "certifierId":"C01", "status":"DECLINED"}'
+
+curl --request PUT \
+--url http://localhost:3000/api/resolveNotification \
+--header 'content-type: application/json' \
+--data '{ "notificationId":"N0002", "certifierId":"C02", "status":"APPROVED"}'
+
+curl --request GET \
+--url 'http://localhost:3000/api/getAllNotifications' \
+--header 'content-type: application/json'
+
+curl --request GET \
+--url 'http://localhost:3000/api/getNotification/N0001' \
+--header 'content-type: application/json'
+
+curl --request GET \
+--url 'http://localhost:3000/api/getNotificationHistory/N0001' \
+--header 'content-type: application/json'
+
+curl --request GET \
+--url 'http://localhost:3000/api/getNotificationByCertifierId/C01' \
+--header 'content-type: application/json'
