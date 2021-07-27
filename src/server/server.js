@@ -315,6 +315,22 @@ app.get('/api/performAudit', async function (req, res) {
     const contract = await fabricNetwork.connectNetwork('connection-certifiers.json', 'wallet/wallet-certifiers');
     const result = await contract.evaluateTransaction('PerformAudit');
     let response = JSON.parse(result.toString());
+
+    for (let index = 0; index < response.length; index++) {
+      const element = response[index];
+      const comp = JSON.parse(await contract.evaluateTransaction('readCompany', element.seller));
+      let nfID = 'NF'+Date.now();
+      let ntf = {
+        notificationId: nfID,
+        certifierId: comp.certifier,
+        certifiedCompanyId: element.seller,
+        notificationType: 'FRAUDULENTBEHAVIOUR',
+        comments: 'Detected as a fraudulent Behaviour',
+        status: 'PENDING',
+        newConversionRate: ''
+      };
+      let tx = await contract.submitTransaction('createNotification', JSON.stringify(ntf));
+    }
     res.json({ result: response });
   } catch (error) {
     console.error(`Failed to evaluate transaction: ${error}`);

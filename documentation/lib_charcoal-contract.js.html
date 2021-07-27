@@ -1,4 +1,32 @@
-'use strict';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/charcoal-contract.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/charcoal-contract.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
 
 const { Certifier } = require('./Models/Certifier');
 const { Notification } = require('./Models/Notification');
@@ -110,7 +138,7 @@ class CharcoalContract extends BaseContract {
         do {
             result = await iterator.next();
 
-            if (result.value && result.value.value.toString()) {
+            if (result.value &amp;&amp; result.value.value.toString()) {
                 const obj = JSON.parse(result.value.value.toString('utf8'));
                 allResults.push(obj);
             }
@@ -131,7 +159,7 @@ class CharcoalContract extends BaseContract {
         do {
             result = await iterator.next();
 
-            if (result.value && result.value.value.toString()) {
+            if (result.value &amp;&amp; result.value.value.toString()) {
                 const obj = JSON.parse(result.value.value.toString('utf8'));
                 allResults.push(obj);
             }
@@ -196,7 +224,7 @@ class CharcoalContract extends BaseContract {
         let counter = 0;
         let historicConversionRate = 0;
         let companyHistory = await this.readCompanyHistory(ctx, companyId);
-        for (let i = 0; i < companyHistory.length; i++) {
+        for (let i = 0; i &lt; companyHistory.length; i++) {
             counter++;
             historicConversionRate += companyHistory[i].conversionRate;
         }
@@ -221,7 +249,7 @@ class CharcoalContract extends BaseContract {
         do {
             result = await iterator.next();
 
-            if (result.value && result.value.value.toString()) {
+            if (result.value &amp;&amp; result.value.value.toString()) {
                 const obj = JSON.parse(result.value.value.toString('utf8'));
                 allResults.push(obj);
             }
@@ -293,7 +321,7 @@ class CharcoalContract extends BaseContract {
         do {
             result = await iterator.next();
 
-            if (result.value && result.value.value.toString()) {
+            if (result.value &amp;&amp; result.value.value.toString()) {
                 const obj = JSON.parse(result.value.value.toString('utf8'));
                 allResults.push(obj);
             }
@@ -353,7 +381,7 @@ class CharcoalContract extends BaseContract {
         let result;
         do {
             result = await iterator.next();
-            if (result.value && result.value.value.toString()) {
+            if (result.value &amp;&amp; result.value.value.toString()) {
                 const obj = JSON.parse(result.value.value.toString('utf8'));
                 allResults.push(obj);
             }
@@ -405,11 +433,11 @@ class CharcoalContract extends BaseContract {
         // Validation
         this._requireCertifiers(ctx);
         let Invoices = await this.readAllInvoices(ctx);
-        for (let i = 0; i < Invoices.length; i++) {
+        for (let i = 0; i &lt; Invoices.length; i++) {
             let InvoiceHistory = await this.readInvoiceHistory(ctx, Invoices[i].invoiceId);
             // Holding Previous Invoice Volumn
             let prevVolumn = 0;
-            for (let j = 0; j < InvoiceHistory.length; j++) {
+            for (let j = 0; j &lt; InvoiceHistory.length; j++) {
                 const invoice = InvoiceHistory[j];
                 if (j === 0) {
                     prevVolumn = invoice.volumn;
@@ -479,7 +507,7 @@ class CharcoalContract extends BaseContract {
         // DeviationCheck
         let Deviation = 0;
         const comp = await this.readCompany(ctx, invoice.seller);
-        if (comp.conversionRate <= 50) {
+        if (comp.conversionRate &lt;= 50) {
             Deviation = 2;
         } else {
             Deviation = 5;
@@ -603,7 +631,7 @@ class CharcoalContract extends BaseContract {
         do {
             result = await iterator.next();
 
-            if (result.value && result.value.value.toString()) {
+            if (result.value &amp;&amp; result.value.value.toString()) {
                 const obj = JSON.parse(result.value.value.toString('utf8'));
                 allResults.push(obj);
             }
@@ -641,7 +669,7 @@ class CharcoalContract extends BaseContract {
         let result;
         do {
             result = await iterator.next();
-            if (result.value && result.value.value.toString()) {
+            if (result.value &amp;&amp; result.value.value.toString()) {
                 const obj = JSON.parse(result.value.value.toString('utf8'));
                 allResults.push(obj);
             }
@@ -666,7 +694,7 @@ class CharcoalContract extends BaseContract {
         do {
             result = await iterator.next();
 
-            if (result.value && result.value.value.toString()) {
+            if (result.value &amp;&amp; result.value.value.toString()) {
                 const obj = JSON.parse(result.value.value.toString('utf8'));
                 if (obj.certifierId === certifierId.toString()) {
                     allResults.push(obj);
@@ -678,4 +706,26 @@ class CharcoalContract extends BaseContract {
     }
 }
 
-module.exports = CharcoalContract;
+module.exports = CharcoalContract;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BaseContract.html">BaseContract</a></li><li><a href="Certifier.html">Certifier</a></li><li><a href="CharcoalContract.html">CharcoalContract</a></li><li><a href="Company.html">Company</a></li><li><a href="Invoice.html">Invoice</a></li><li><a href="Notification.html">Notification</a></li></ul><h3>Global</h3><ul><li><a href="global.html#contracts">contracts</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Jul 26 2021 23:18:58 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
