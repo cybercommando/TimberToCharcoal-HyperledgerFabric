@@ -1,0 +1,6 @@
+node_modules
+charcoal-network/channel-artifacts/
+charcoal-network/crypto-config/
+wallet/
+.vscode
+*~
