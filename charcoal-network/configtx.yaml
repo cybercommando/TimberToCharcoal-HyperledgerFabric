@@ -45,6 +45,21 @@ Organizations:
                 Type: Signature
                 Rule: "OR('CertifiersMSP.admin')"
 
+    - &TestOrg
+        Name: TestOrgMSP
+        ID: TestOrgMSP
+        MSPDir: crypto-config/peerOrganizations/testOrg.example.com/msp
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('TestOrgMSP.admin', 'TestOrgMSP.peer', 'TestOrgMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('TestOrgMSP.admin', 'TestOrgMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('TestOrgMSP.admin')"
+
 Capabilities:
     Channel: &ChannelCapabilities
         V1_4_3: true
@@ -134,6 +149,7 @@ Profiles:
                 Organizations:
                     - *CertifiedCompanies
                     - *Certifiers
+                    - *TestOrg
     AuditChannel:
         Consortium: SampleConsortium
         <<: *ChannelDefaults
@@ -142,6 +158,6 @@ Profiles:
             Organizations:
                 - *CertifiedCompanies
                 - *Certifiers
+                - *TestOrg
             Capabilities:
                 <<: *ApplicationCapabilities
-

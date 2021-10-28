@@ -20,3 +20,10 @@ PeerOrgs:
       Count: 1
     Users:
       Count: 1
+  - Name: TestOrg
+    Domain: testOrg.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      Count: 1

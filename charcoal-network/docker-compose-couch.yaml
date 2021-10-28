@@ -36,7 +36,7 @@ services:
       - COUCHDB_USER=
       - COUCHDB_PASSWORD=
     ports: 
-      - "7984:5984"
+      - "6984:5984"
     networks:
       - byfn
 
@@ -48,3 +48,23 @@ services:
       - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
     depends_on: 
       - couchdb1
+
+  couchdb2:
+    container_name: couchdb2
+    image: hyperledger/fabric-couchdb
+    environment: 
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports: 
+      - "7984:5984"
+    networks:
+      - byfn
+
+  peer0.testOrg.example.com:
+    environment: 
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb2:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    depends_on: 
+      - couchdb2
