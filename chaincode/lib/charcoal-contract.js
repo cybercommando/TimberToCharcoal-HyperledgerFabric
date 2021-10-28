@@ -18,6 +18,25 @@ class CharcoalContract extends BaseContract {
         super('com.timbertocharcoal.charcoalcontract');
     }
 
+    async initLedger(ctx) {
+        console.info('============ Start: Initialize Ledger ============');
+        const tempCompany = {
+            companyId : 'CC020',
+            name : 'Company 020',
+            status : 'SUSPENDED',
+            conversionRate : '80',
+            certifier : 'C02'
+        };
+
+        // Object Creation from parameters
+        const comp = Company.from(tempCompany).toBuffer();
+        // Inserting Record in Ledger
+        await ctx.stub.putState(this._createCompanyCompositKey(ctx.stub, tempCompany.companyId.toString()), comp);
+        ctx.stub.setEvent(events.CompanyInserted, comp);
+        console.info('============ End: Initialize Ledger ============');
+        return ctx.stub.getTxID();
+    }
+
     //==========================================/
     // Invoice Registration
     //==========================================/
@@ -177,7 +196,7 @@ class CharcoalContract extends BaseContract {
      */
     async readCompany(ctx, companyId) {
         // Validation
-        this._requireCertifiers(ctx);
+        //this._requireCertifiers(ctx);
         this._require(companyId.toString(), 'Company Id');
         return await this._getCompany(ctx.stub, companyId.toString());
     }
@@ -200,7 +219,7 @@ class CharcoalContract extends BaseContract {
             counter++;
             historicConversionRate += companyHistory[i].conversionRate;
         }
-        if (counter === 0){
+        if (counter === 0) {
             return 0;
         } else {
             return historicConversionRate / counter;
@@ -266,7 +285,7 @@ class CharcoalContract extends BaseContract {
      */
     async changeConversionRate(ctx, companyId, conversionRate) {
         // Validation
-        this._requireCertifiers(ctx);
+        //this._requireCertifiers(ctx);
         this._require(companyId.toString(), 'Company Id');
         this._require(conversionRate.toString(), 'Conversion Rate');
         const companyInstance = await this._getCompany(ctx.stub, companyId);
