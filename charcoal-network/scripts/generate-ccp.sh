@@ -33,3 +33,12 @@ PEERPEM=./charcoal-network/crypto-config/peerOrganizations/certifiers.example.co
 CAPEM=./charcoal-network/crypto-config/peerOrganizations/certifiers.example.com/ca/ca.certifiers.example.com-cert.pem
 
 echo "$(json_ccp $ORG $ORGMSP $P0PORT $CAPORT $PEERPEM $CAPEM)" > ./connections/connection-certifiers.json
+
+ORG=testOrg
+ORGMSP=TestOrg
+P0PORT=9051
+CAPORT=9054
+PEERPEM=./charcoal-network/crypto-config/peerOrganizations/testOrg.example.com/tlsca/tlsca.testOrg.example.com-cert.pem
+CAPEM=./charcoal-network/crypto-config/peerOrganizations/testOrg.example.com/ca/ca.testOrg.example.com-cert.pem
+
+echo "$(json_ccp $ORG $ORGMSP $P0PORT $CAPORT $PEERPEM $CAPEM)" > ./connections/connection-testOrg.json

@@ -9,8 +9,10 @@ volumes:
   orderer.example.com:
   peer0.certifiedCompanies.example.com:
   peer0.certifiers.example.com:
+  peer0.testOrg.example.com:
   caCertifiedCompanies:
   caCertifiers:
+  caTestOrg:
 
 networks:
   byfn:
@@ -40,6 +42,14 @@ services:
       service: peer0.certifiers.example.com
     networks:
       - byfn
+  
+  peer0.testOrg.example.com:
+    container_name: peer0.testOrg.example.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.testOrg.example.com
+    networks:
+      - byfn
 
   caCertifiers:
     container_name: caCertifiers
@@ -54,6 +64,14 @@ services:
     extends:
       file:  base/docker-compose-base.yaml
       service: caCertifiedCompanies
+    networks:
+      - byfn
+
+  caTestOrg:
+    container_name: caTestOrg
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: caTestOrg
     networks:
       - byfn
 
@@ -87,7 +105,9 @@ services:
       - orderer.example.com
       - peer0.certifiedCompanies.example.com
       - peer0.certifiers.example.com
+      - peer0.testOrg.example.com
       - caCertifiedCompanies
       - caCertifiers
+      - caTestOrg
     networks:
       - byfn

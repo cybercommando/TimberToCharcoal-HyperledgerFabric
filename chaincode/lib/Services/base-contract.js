@@ -26,7 +26,8 @@ class BaseContract extends Contract {
      * @param {string} invoice - Invoice Id
      */
     _createInvoiceCompositKey(stub, invoice) {
-        return stub.createCompositeKey('invoice', [`${invoice}`]);
+        //return stub.createCompositeKey('invoice', [`${invoice}`]);
+        return 'invoice_'.concat(invoice);
     }
 
     /**
@@ -36,7 +37,8 @@ class BaseContract extends Contract {
      * @param {string} companyId - Company Id
      */
     _createCompanyCompositKey(stub, companyId) {
-        return stub.createCompositeKey('company', [`${companyId}`]);
+        //return stub.createCompositeKey('company', [`${companyId}`]);
+        return 'company_'.concat(companyId);
     }
 
     /**
@@ -46,7 +48,8 @@ class BaseContract extends Contract {
      * @param {string} certifierId - Certifier Id
      */
     _createCertifierCompositKey(stub, certifierId) {
-        return stub.createCompositeKey('certifier', [`${certifierId}`]);
+        //return stub.createCompositeKey('certifier', [`${certifierId}`]);
+        return 'certifier_'.concat(certifierId);
     }
 
     /**
@@ -56,7 +59,8 @@ class BaseContract extends Contract {
      * @param {string} notificationId - Notification Id
      */
     _createNotificationCompositKey(stub, notificationId) {
-        return stub.createCompositeKey('notification', [`${notificationId}`]);
+        //return stub.createCompositeKey('notification', [`${notificationId}`]);
+        return 'notification_'.concat(notificationId);
     }
 
     /**
