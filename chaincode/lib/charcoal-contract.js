@@ -18,6 +18,12 @@ class CharcoalContract extends BaseContract {
         super('com.timbertocharcoal.charcoalcontract');
     }
 
+    /**
+     * This method is for initializing the ledger with default value.
+     * This method is only for the purpose of testing Hyperledger Immutability
+     * @param {ctx} ctx - Request Context
+     * @returns {JSON} Transaction ID
+     */
     async initLedger(ctx) {
         console.info('============ Start: Initialize Ledger ============');
         const tempCompany = {
