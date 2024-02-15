@@ -13,11 +13,13 @@ app.post('/api/addInvoice', async function (req, res) {
   try {
     const contract = await fabricNetwork.connectNetwork('connection-certifiedCompanies.json', 'wallet/wallet-certifiedCompanies');
     let inv = {
-      id: req.body.id,
+      invoiceId: req.body.invoiceId,
+      productId: req.body.productId,
       volumn: req.body.volumn,
       seller: req.body.seller,
       buyer: req.body.buyer,
-      date: req.body.date
+      date: req.body.date,
+      invoiceHash: req.body.invoiceHash
     }
     let tx = await contract.submitTransaction('createInvoice', JSON.stringify(inv));
     res.json({

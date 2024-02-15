@@ -9,6 +9,7 @@ docker tag hyperledger/fabric-ccenv:1.4.3 hyperledger/fabric-ccenv:latest
 
 docker-compose -f ./charcoal-network/docker-compose-cli.yaml -f ./charcoal-network/docker-compose-couch.yaml up -d
 
+# Waiting to Initiate CouchDB Services
 sleep 5
 
 echo 
