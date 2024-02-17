@@ -1,7 +1,7 @@
 'use strict';
 
 const { Contract } = require('fabric-contract-api'),
-    { Invoice } = require('./Invoice');
+    { Invoice } = require('../Models/Invoice');
 
 class BaseContract extends Contract {
     constructor(namespace) {
