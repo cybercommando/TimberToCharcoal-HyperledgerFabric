@@ -86,6 +86,11 @@ class BaseContract extends Contract {
 
         return this._toBuffer(allResults).toString();
     }
+
+    async _doesStateExist(stub, compositeKey) {
+        const savedStateBytes = await stub.getState(compositeKey);
+        return !!savedStateBytes && savedStateBytes.toString().length > 0;
+    }
 }
 
 module.exports = { BaseContract };
