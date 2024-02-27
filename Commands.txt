@@ -14,17 +14,7 @@ curl --request POST \
 curl --request POST \
 --url http://localhost:3000/api/registerCompany \
 --header 'content-type: application/json' \
---data '{ "companyId":"CC001", "name":"Company 001", "status":"ACTIVE", "conversionRate":"20"}'
-
-curl --request POST \
---url http://localhost:3000/api/registerCompany \
---header 'content-type: application/json' \
---data '{ "companyId":"CC002", "name":"Company 002", "status":"ACTIVE", "conversionRate":"22"}'
-
-curl --request POST \
---url http://localhost:3000/api/registerCompany \
---header 'content-type: application/json' \
---data '{ "companyId":"CC009", "name":"Company 009", "status":"SUSPENDED", "conversionRate":"80"}'
+--data '{ "companyId":"CC020", "name":"Company 020", "status":"SUSPENDED", "conversionRate":"80"}'
 
 curl --request GET \
 --url 'http://localhost:3000/api/getAllCompanies' \
@@ -37,7 +27,7 @@ curl --request GET \
 curl --request PUT \
 --url http://localhost:3000/api/changeCompanyStatus \
 --header 'content-type: application/json' \
---data '{ "companyId":"CC009", "status":"ACTIVE"}'
+--data '{ "companyId":"CC020", "status":"ACTIVE"}'
 
 //=====================================
 // For Invoices
@@ -46,13 +36,18 @@ curl --request PUT \
 curl --request POST \
 --url http://localhost:3000/api/addInvoice \
 --header 'content-type: application/json' \
---data '{ "invoiceId":"10001", "productId":"10002", "volumn":"1000", "buyer":"CC001", "seller":"CC002", "date":"12/12/21", "invoiceHash":"some temporary hash"}'
+--data '{ "invoiceId":"INV111", "productId":"10002", "productLotNo":"LOT1100", "volumn":"1000", "buyer":"CC005", "seller":"CC001", "date":"12/12/2021", "invoiceHash":"some temporary hash"}'
 
 curl --request POST \
 --url http://localhost:3000/api/addInvoice \
 --header 'content-type: application/json' \
---data '{ "invoiceId":"10001", "productId":"10002", "volumn":"1000", "buyer":"CC001", "seller":"CC009", "date":"12/12/21", "invoiceHash":"some temporary hash"}'
+--data '{ "invoiceId":"INV091", "productId":"Timber Wood", "productLotNo":"LOT0900", "volumn":"2000", "buyer":"CC007", "seller":"CC004", "date":"03/23/2021", "invoiceHash":"some temporary hash"}'
+
+curl --request POST \
+--url http://localhost:3000/api/addInvoice \
+--header 'content-type: application/json' \
+--data '{ "invoiceId":"INV101", "productId":"Timber Wood", "productLotNo":"LOT1000", "volumn":"2000", "buyer":"CC007", "seller":"CC003", "date":"03/31/2021", "invoiceHash":"some temporary hash"}'
 
 curl --request GET \
---url 'http://localhost:3000/api/getInvoice/10001' \
+--url 'http://localhost:3000/api/getInvoice/INV111' \
 --header 'content-type: application/jason'
