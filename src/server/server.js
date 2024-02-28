@@ -69,6 +69,20 @@ app.get('/api/getInvoice/:id', async function (req, res) {
   }
 });
 
+app.get('/api/getAllInvoices', async function (req, res) {
+  try {
+    const contract = await fabricNetwork.connectNetwork('connection-certifiers.json', 'wallet/wallet-certifiers');
+    const result = await contract.evaluateTransaction('readAllInvoices');
+    let response = JSON.parse(result.toString());
+    res.json({ result: response });
+  } catch (error) {
+    console.error(`Failed to evaluate transaction: ${error}`);
+    res.status(500).json({
+      error: error
+    });
+  }
+});
+
 //==========================================/
 //Certification
 //==========================================/
