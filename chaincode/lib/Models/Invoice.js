@@ -4,7 +4,6 @@ class Invoice {
     constructor() {
         this.invoiceId = '';
         this.productId = '';
-        this.productLotNo = '';
         this.volumn = '';
         this.seller = '';
         this.buyer = '';
