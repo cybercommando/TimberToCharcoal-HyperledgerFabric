@@ -101,8 +101,8 @@ class CharcoalContract extends BaseContract {
             result = await iterator.next();
 
             if (result.value && result.value.value.toString()) {
-                const splitCompositKey = ctx.stub.splitCompositeKey(result.value.key);
-                allResults.push(await this._getInvoice(ctx.stub, splitCompositKey.attributes[0]));
+                const obj = JSON.parse(result.value.value.toString('utf8'));
+                allResults.push(obj);
             }
         }
         while (!result.done);
@@ -154,8 +154,8 @@ class CharcoalContract extends BaseContract {
             result = await iterator.next();
 
             if (result.value && result.value.value.toString()) {
-                const splitCompositKey = ctx.stub.splitCompositeKey(result.value.key);
-                allResults.push(await this._getCompany(ctx.stub, splitCompositKey.attributes[0]));
+                const obj = JSON.parse(result.value.value.toString('utf8'));
+                allResults.push(obj);
             }
         }
         while (!result.done);
@@ -183,6 +183,22 @@ class CharcoalContract extends BaseContract {
         else {
             throw new Error(`Error: The provided Status: ${status}, is not valid`);
         }
+    }
+
+    async readCompanyStatusHistory(ctx, companyId) {
+        let iterator = await ctx.stub.getHistoryForKey(this._createCompanyCompositKey(ctx.stub, companyId.toString()));
+        let result = [];
+        let res = await iterator.next();
+        while (!res.done) {
+            if (res.value) {
+                console.info(`found state update with value: ${res.value.value.toString('utf8')}`);
+                const obj = JSON.parse(res.value.value.toString('utf8'));
+                result.push(obj);
+            }
+            res = await iterator.next();
+        }
+        await iterator.close();
+        return result;
     }
 
 

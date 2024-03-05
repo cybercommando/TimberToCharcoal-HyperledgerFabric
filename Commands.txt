@@ -24,6 +24,10 @@ curl --request GET \
 --url 'http://localhost:3000/api/getCompany/CC001' \
 --header 'content-type: application/json'
 
+curl --request GET \
+--url 'http://localhost:3000/api/getCompanyStatusHistory/CC001' \
+--header 'content-type: application/json'
+
 curl --request PUT \
 --url http://localhost:3000/api/changeCompanyStatus \
 --header 'content-type: application/json' \
