@@ -9,6 +9,7 @@ docker rmi $(docker images dev-* q)
 rm -r ./charcoal-network/crypto-config
 rm -r ./charcoal-network/channel-artifacts
 rm -r ./charcoal-network/base/docker-compose-base.yaml
+rm -r ./wallet
 rm -r ./connections/connection-certifiedCompanies.json
 rm -r ./connections/connection-certifiers.json
 rm -r ./connections/connection-testOrg.json
