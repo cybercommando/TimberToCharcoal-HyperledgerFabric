@@ -169,29 +169,10 @@ class CharcoalContract extends BaseContract {
         let counter = 0;
         let historicConversionRate = 0;
 
-        let Invoices = await this.readAllInvoices(ctx);
-        for (let i = 0; i < Invoices.length; i++) {
-            let InvoiceHistory = await this.readInvoiceHistory(ctx, Invoices[i].invoiceId);
-
-            //Holding Previous Invoice Volumn
-            let prevVolumn = 0;
-            let implicitConversionRate = 0;
-            for (let j = 0; j < InvoiceHistory.length; j++) {
-                const invoice = InvoiceHistory[j];
-                if (j === 0) {
-                    implicitConversionRate = 100;
-                    prevVolumn = invoice.volumn;
-                }
-                else {
-                    implicitConversionRate = (invoice.volumn / prevVolumn) * 100;
-                    prevVolumn = invoice.volumn;
-                }
-
-                if (invoice.seller === companyId) {
-                    counter++;
-                    historicConversionRate += implicitConversionRate;
-                }
-            }
+        let companyHistory = await this.readCompanyHistory(ctx, companyId);
+        for (let i = 0; i < companyHistory.length; i++) {
+            counter++;
+            historicConversionRate += companyHistory[i].conversionRate;
         }
 
         return historicConversionRate / counter;
@@ -241,7 +222,7 @@ class CharcoalContract extends BaseContract {
         }
     }
 
-    async readCompanyStatusHistory(ctx, companyId) {
+    async readCompanyHistory(ctx, companyId) {
 
         //Validation
         this._requireCertifiers(ctx);
@@ -295,15 +276,15 @@ class CharcoalContract extends BaseContract {
                     //==========================================/
                     //Conversion Rate
                     //==========================================/
-                    let ConversionRateComparisonResult = this.CompareConversionRate(ctx, prevVolumn, invoice);
+                    let ConversionRateComparisonResult = await this.CompareConversionRate(ctx, prevVolumn, invoice);
 
                     //==========================================/
                     //Comparison
                     //==========================================/
-                    if (AggregateComparisonResult || ConversionRateComparisonResult) {
+                    let result = await this.ProcessComparisonResults(ctx, AggregateComparisonResult, ConversionRateComparisonResult);
+                    if (result) {
                         FinalResult.push(invoice);
                     }
-
                     prevVolumn = invoice.volumn;
                 }
                 //FinalResult.push(invoice);
@@ -329,25 +310,42 @@ class CharcoalContract extends BaseContract {
     }
 
     //==========================================/
-    //Conversion Rate
+    //Compare Conversion Rate
     //==========================================/
-    CompareConversionRate(ctx, prevVolumn, invoice) {
+    async CompareConversionRate(ctx, prevVolumn, invoice) {
         //calculateImplicitConversionRate
+        let implicitCR = (invoice.volumn / prevVolumn) * 100;
 
         //ExtractHistoricConversionRate
+        let historicCR = await this.readCompanyHistoricConversionRate(ctx, invoice.seller);
+
+        //DeviationCheck
+        let Deviation = 0;
+        const comp = await this.readCompany(ctx, invoice.seller);
+        if (comp.conversionRate <= 50) {
+            Deviation = 2;
+        } else {
+            Deviation = 5;
+        }
 
         //CompareConversionRate
+        if ((Math.abs(historicCR - implicitCR) > Deviation)) {
+            return true;
+        }
 
         return false;
     }
 
 
     //==========================================/
-    //Comparison
+    //Process Comparison Results
     //==========================================/
 
-    compareResults(ctx, AggVolume, CR) {
-        return 'compareResults: Not Implemented Yet';
+    async ProcessComparisonResults(ctx, AggVolume, CR) {
+        if (AggVolume || CR) {
+            return true;
+        }
+        return false;
     }
 }
 

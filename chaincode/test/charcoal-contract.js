@@ -5,7 +5,7 @@
 'use strict';
 
 const { ChaincodeStub, ClientIdentity } = require('fabric-shim');
-const { InvoiceContract } = require('..');
+const { CharcoalContract } = require('..');
 const winston = require('winston');
 
 const chai = require('chai');
@@ -30,13 +30,13 @@ class TestContext {
 
 }
 
-describe('InvoiceContract', () => {
+describe('CharcoalContract', () => {
 
     let contract;
     let ctx;
 
     beforeEach(() => {
-        contract = new InvoiceContract();
+        contract = new CharcoalContract();
         ctx = new TestContext();
         ctx.stub.getState.withArgs('1001').resolves(Buffer.from('{"value":"invoice 1001 value"}'));
         ctx.stub.getState.withArgs('1002').resolves(Buffer.from('{"value":"invoice 1002 value"}'));
