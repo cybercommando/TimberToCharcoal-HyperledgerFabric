@@ -22,7 +22,8 @@ app.post('/api/initData', async function (req, res) {
         companyId: companies[i].companyId,
         name: companies[i].name,
         status: companies[i].status,
-        conversionRate: companies[i].conversionRate
+        conversionRate: companies[i].conversionRate,
+        certifier: companies[i].certifier
       };
       await contract1.submitTransaction('registerCompany', JSON.stringify(comp));
     }
@@ -150,7 +151,8 @@ app.post('/api/registerCompany', async function (req, res) {
       companyId: req.body.companyId,
       name: req.body.name,
       status: req.body.status,
-      conversionRate: req.body.conversionRate
+      conversionRate: req.body.conversionRate,
+      certifier: req.body.certifier
     };
     let tx = await contract.submitTransaction('registerCompany', JSON.stringify(comp));
     res.json({

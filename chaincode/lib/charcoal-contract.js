@@ -145,6 +145,7 @@ class CharcoalContract extends BaseContract {
         this._require(tempCompany.name.toString(), 'Company Name');
         this._require(tempCompany.status.toString(), 'Company Status');
         this._require(tempCompany.conversionRate.toString(), 'Conversion Rate');
+        this._require(tempCompany.certifier.toString(), 'Certifier');
 
         //Object Creation from parameters
         const comp = Company.from(tempCompany).toBuffer();

@@ -6,6 +6,7 @@ class Company {
         this.name = '';
         this.status = '';
         this.conversionRate = '';
+        this.certifier = '';
     }
 
     static from(bufferOrJson) {
