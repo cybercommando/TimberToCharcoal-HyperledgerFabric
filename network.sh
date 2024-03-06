@@ -5,7 +5,7 @@ if [ "$1" == "start" ]; then
     echo "*********************************"
     ./charcoal-network/scripts/generate.sh
     echo "*********************************"
-    echo "      Starting Network           "
+    echo "      Starting HLF Network           "
     echo "*********************************"
     ./charcoal-network/scripts/start.sh
     echo "*********************************"
