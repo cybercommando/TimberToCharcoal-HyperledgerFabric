@@ -136,3 +136,35 @@ curl --request GET \
 curl --request GET \
 --url 'http://localhost:3000/api/getNotificationByCertifierId/C01' \
 --header 'content-type: application/json'
+
+//=====================================
+// Notification for Fraudulent Behaviour
+//=====================================
+
+curl --request POST \
+--url http://localhost:3000/api/createNotification \
+--header 'content-type: application/json' \
+--data '{ "notificationId":"NF001", "certifierId":"C02", "certifiedCompanyId":"CC009", "notificationType":"FRAUDULENTBEHAVIOUR", "comments":"Detected as a fraudulent Behaviour", "status":"PENDING"}'
+
+curl --request POST \
+--url http://localhost:3000/api/createNotification \
+--header 'content-type: application/json' \
+--data '{ "notificationId":"NF002", "certifierId":"C02", "certifiedCompanyId":"CC010", "notificationType":"FRAUDULENTBEHAVIOUR", "comments":"Detected as a fraudulent Behaviour", "status":"PENDING"}'
+
+curl --request PUT \
+--url http://localhost:3000/api/resolveNotification \
+--header 'content-type: application/json' \
+--data '{ "notificationId":"NF001", "certifierId":"C02", "status":"APPROVED"}'
+
+curl --request PUT \
+--url http://localhost:3000/api/resolveNotification \
+--header 'content-type: application/json' \
+--data '{ "notificationId":"NF002", "certifierId":"C02", "status":"APPROVED"}'
+
+curl --request GET \
+--url 'http://localhost:3000/api/getCompanyHistory/CC009' \
+--header 'content-type: application/json'
+
+curl --request GET \
+--url 'http://localhost:3000/api/getCompanyHistory/CC010' \
+--header 'content-type: application/json'
