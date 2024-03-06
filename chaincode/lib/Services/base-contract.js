@@ -3,6 +3,7 @@
 const { Contract } = require('fabric-contract-api'),
     { Invoice } = require('../Models/Invoice'),
     { Company } = require('../Models/Company');
+const { Certifier } = require('../Models/Certifier');
 
 class BaseContract extends Contract {
     constructor(namespace) {
@@ -15,6 +16,10 @@ class BaseContract extends Contract {
 
     _createCompanyCompositKey(stub, companyId) {
         return stub.createCompositeKey('company', [`${companyId}`]);
+    }
+
+    _createCertifierCompositKey(stub, certifierId) {
+        return stub.createCompositeKey('certifier', [`${certifierId}`]);
     }
 
     _require(value, name) {
@@ -58,6 +63,12 @@ class BaseContract extends Contract {
         const compositKey = this._createCompanyCompositKey(stub, companyId);
         const companyBytes = await stub.getState(compositKey);
         return Company.from(companyBytes);
+    }
+
+    async _getCertifier(stub, certifierId) {
+        const compositKey = this._createCertifierCompositKey(stub, certifierId);
+        const certifierBytes = await stub.getState(compositKey);
+        return Certifier.from(certifierBytes);
     }
 
     async _readAllStatesByPartialCompositKey(stub, keyIdentifier) {

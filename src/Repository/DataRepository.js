@@ -337,5 +337,17 @@ module.exports = {
             date: '3/19/21',
             invoiceHash: 'Sample Hash'
         }
+    ],
+    CertifierData:[
+        {
+            certifierId: 'C01',
+            certifierName: 'Certifier 01',
+            status: 'ACTIVE'
+        },
+        {
+            certifierId: 'C02',
+            certifierName: 'Certifier 02',
+            status: 'ACTIVE'
+        }
     ]
 };

@@ -45,6 +45,27 @@ curl --request GET \
 --header 'content-type: application/json'
 
 //=====================================
+// For Certifiers
+//=====================================
+curl --request POST \
+--url http://localhost:3000/api/registerCertifier \
+--header 'content-type: application/json' \
+--data '{ "certifierId":"C03", "certifierName":"Certifier 03", "status":"INACTIVE"}'
+
+curl --request GET \
+--url 'http://localhost:3000/api/getAllCertifiers' \
+--header 'content-type: application/json'
+
+curl --request GET \
+--url 'http://localhost:3000/api/getCertifier/C03' \
+--header 'content-type: application/json'
+
+curl --request PUT \
+--url http://localhost:3000/api/changeCertifierStatus \
+--header 'content-type: application/json' \
+--data '{ "certifierId":"C03", "status":"ACTIVE"}'
+
+//=====================================
 // For Invoices
 //=====================================
 
