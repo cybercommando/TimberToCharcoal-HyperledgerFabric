@@ -229,16 +229,72 @@ class CharcoalContract extends BaseContract {
         return allResults;
     }
 
-
     //==========================================/
-    //Compare Aggregate
+    //Audit
     //==========================================/
 
-    extractPurchasedVolumes(ctx, invoice) {
+    async PerformAudit(ctx) {
+        let FinalResult = [];
+        //Validation
+        this._requireCertifiers(ctx);
+
+        let Invoices = await this.readAllInvoices(ctx);
+        for (let i = 0; i < Invoices.length; i++) {
+            let InvoiceHistory = await this.readInvoiceHistory(ctx, Invoices[i].invoiceId);
+
+            //Holding Previous Invoice Volumn
+            let prevVolumn = 0;
+            for (let j = 0; j < InvoiceHistory.length; j++) {
+                const invoice = InvoiceHistory[j];
+                if (j === 0) {
+                    prevVolumn = invoice.volumn;
+                }
+                else {
+                    //==========================================/
+                    //Compare Aggregate
+                    //==========================================/
+
+                    //ExtractPurchasedVolumes
+                    let purchasedVolumn = invoice.volumn;
+
+                    //CalculateAggregateVolume
+                    const seller = await this.readCompany(ctx, invoice.seller);
+                    let aggregatedVolumn = (seller.conversionRate / 100) * prevVolumn;
+                    if (purchasedVolumn > aggregatedVolumn) {
+                        FinalResult.push(invoice);
+                    }
+                    prevVolumn = invoice.volumn;
+                }
+                //FinalResult.push(invoice);
+            }
+
+
+
+            //==========================================/
+            //Conversion Rate
+            //==========================================/
+
+            //calculateImplicitConversionRate
+
+            //ExtractHistoricConversionRate
+
+            //CompareConversionRate
+
+
+            //==========================================/
+            //Comparison
+            //==========================================/
+
+            //CompareResult
+        }
+        return FinalResult;
+    }
+
+    extractPurchasedVolumes(invoice) {
         return 'extractPurchasedVolumes: Not Implemented Yet';
     }
 
-    calculateAggregateVolume(ctx, invoice) {
+    calculateAggregateVolume(invoice) {
         return 'calculateAggregateVolume: Not Implemented Yet';
     }
 

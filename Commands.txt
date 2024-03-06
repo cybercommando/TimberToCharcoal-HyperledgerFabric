@@ -6,6 +6,13 @@ curl --request POST \
 --url http://localhost:3000/api/initData \
 --header 'content-type: application/json'
 
+//=====================================
+// To Perform Audit
+//=====================================
+
+curl --request GET \
+--url 'http://localhost:3000/api/performAudit' \
+--header 'content-type: application/json'
 
 //=====================================
 // For Companies
