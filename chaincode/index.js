@@ -1,9 +1,9 @@
-/*
- * SPDX-License-Identifier: Apache-2.0
- */
-
 'use strict';
+
 
 const CharcoalContract = require('./lib/charcoal-contract');
 
+/**
+ * Exporting CharcoalContract chaincode
+ */
 module.exports.contracts = [ CharcoalContract ];
