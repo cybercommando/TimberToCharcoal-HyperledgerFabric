@@ -5,6 +5,9 @@ module.exports = {
     InvoiceUpdated: 'InvoiceUpdated',
     CompanyInserted: 'CompanyInserted',
     CompanyStatusChanged: 'CompanyStatusChanged',
+    CompanyConversionRateChanged: 'CompanyConversionRateChanged',
     CertifierInserted: 'CertifierInserted',
-    CertifierStatusChanged: 'CertifierStatusChanged'
+    CertifierStatusChanged: 'CertifierStatusChanged',
+    NotificationCreated: 'NotificationCreated',
+    NotificationResolved: 'NotificationResolved'
 };

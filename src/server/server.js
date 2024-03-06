@@ -324,6 +324,107 @@ app.get('/api/performAudit', async function (req, res) {
   }
 });
 
+//==========================================/
+//Notification
+//==========================================/
+app.post('/api/createNotification', async function (req, res) {
+  try {
+    const contract = await fabricNetwork.connectNetwork('connection-certifiedCompanies.json', 'wallet/wallet-certifiedCompanies');
+    let ntf = {
+      notificationId: req.body.notificationId,
+      certifierId: req.body.certifierId,
+      certifiedCompanyId: req.body.certifiedCompanyId,
+      notificationType: req.body.notificationType,
+      comments: req.body.comments,
+      status: req.body.status,
+      newConversionRate: req.body.newConversionRate
+    };
+    let tx = await contract.submitTransaction('createNotification', JSON.stringify(ntf));
+    res.json({
+      status: 'OK - Transaction has been submitted',
+      txid: tx.toString()
+    });
+  } catch (error) {
+    console.error(`Failed to evaluate transaction: ${error}`);
+    res.status(500).json({
+      error: error
+    });
+  }
+});
+
+app.put('/api/resolveNotification', async function (req, res) {
+  try {
+    const contract = await fabricNetwork.connectNetwork('connection-certifiers.json', 'wallet/wallet-certifiers');
+
+    let tx = await contract.submitTransaction('resolveNotification', req.body.notificationId, req.body.certifierId, req.body.status);
+    res.json({
+      status: 'OK - Transaction has been submitted',
+      txid: tx.toString()
+    });
+  } catch (error) {
+    console.error(`Failed to evaluate transaction: ${error}`);
+    res.status(500).json({
+      error: error
+    });
+  }
+});
+
+app.get('/api/getAllNotifications', async function (req, res) {
+  try {
+    const contract = await fabricNetwork.connectNetwork('connection-certifiers.json', 'wallet/wallet-certifiers');
+    const result = await contract.evaluateTransaction('readAllNotifications');
+    let response = JSON.parse(result.toString());
+    res.json({ result: response });
+  } catch (error) {
+    console.error(`Failed to evaluate transaction: ${error}`);
+    res.status(500).json({
+      error: error
+    });
+  }
+});
+
+app.get('/api/getNotification/:id', async function (req, res) {
+  try {
+    const contract = await fabricNetwork.connectNetwork('connection-certifiers.json', 'wallet/wallet-certifiers');
+    const result = await contract.evaluateTransaction('readNotification', req.params.id.toString());
+    let response = JSON.parse(result.toString());
+    res.json({ result: response });
+  } catch (error) {
+    console.error(`Failed to evaluate transaction: ${error}`);
+    res.status(500).json({
+      error: error
+    });
+  }
+});
+
+app.get('/api/getNotificationByCertifierId/:id', async function (req, res) {
+  try {
+    const contract = await fabricNetwork.connectNetwork('connection-certifiers.json', 'wallet/wallet-certifiers');
+    const result = await contract.evaluateTransaction('readNotificationsByCertifierId', req.params.id.toString());
+    let response = JSON.parse(result.toString());
+    res.json({ result: response });
+  } catch (error) {
+    console.error(`Failed to evaluate transaction: ${error}`);
+    res.status(500).json({
+      error: error
+    });
+  }
+});
+
+app.get('/api/getNotificationHistory/:id', async function (req, res) {
+  try {
+    const contract = await fabricNetwork.connectNetwork('connection-certifiers.json', 'wallet/wallet-certifiers');
+    const result = await contract.evaluateTransaction('readNotificationHistory', req.params.id.toString());
+    let response = JSON.parse(result.toString());
+    res.json({ result: response });
+  } catch (error) {
+    console.error(`Failed to evaluate transaction: ${error}`);
+    res.status(500).json({
+      error: error
+    });
+  }
+});
+
 var serverObj = app.listen(3000, () => {
   console.log("***********************************");
   console.log("API Server listening at localhost:3000");
