@@ -31,7 +31,7 @@ services:
       - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
       - CORE_PEER_CHAINCODEADDRESS=peer0.certifiedCompanies.example.com:7052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.certifiedCompanies.example.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.certifiers.example.com:8051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.certifiedCompanies.example.com:7051
       - CORE_PEER_LOCALMSPID=CertifiedCompaniesMSP
     volumes:
@@ -54,7 +54,7 @@ services:
       - CORE_PEER_CHAINCODEADDRESS=peer0.certifiers.example.com:8052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.certifiers.example.com:8051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.certifiedCompanies.example.com:8051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.certifiedCompanies.example.com:7051
       - CORE_PEER_LOCALMSPID=CertifiersMSP
     volumes:
         - /var/run/:/host/var/run/
@@ -64,6 +64,27 @@ services:
     ports:
       - 8051:8051
 
+  peer0.testOrg.example.com:
+    container_name: peer0.testOrg.example.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.testOrg.example.com
+      - CORE_PEER_ADDRESS=peer0.testOrg.example.com:9051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.testOrg.example.com:9052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.testOrg.example.com:9051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.certifiedCompanies.example.com:7051
+      - CORE_PEER_LOCALMSPID=TestOrgMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/testOrg.example.com/peers/peer0.testOrg.example.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/testOrg.example.com/peers/peer0.testOrg.example.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.testOrg.example.com:/var/hyperledger/production
+    ports:
+      - 9051:9051
 
   caCertifiedCompanies:
     image: hyperledger/fabric-ca:$IMAGE_TAG
@@ -94,4 +115,19 @@ services:
     command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.certifiers.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/CA2_PRIVATE_KEY -b admin:adminpw -d'
     volumes:
       - ../crypto-config/peerOrganizations/certifiers.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+  
+  caTestOrg:
+    image: hyperledger/fabric-ca:$IMAGE_TAG
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-testOrg
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.testOrg.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/CA3_PRIVATE_KEY
+      - FABRIC_CA_SERVER_PORT=9054
+    ports:
+      - "9054:9054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.testOrg.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/CA3_PRIVATE_KEY -b admin:adminpw -d'
+    volumes:
+      - ../crypto-config/peerOrganizations/testOrg.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
     

@@ -15,6 +15,7 @@ CURRENT_DIR=$PWD
 cd ./charcoal-network/base
 cp docker-compose-base-template.yaml docker-compose-base.yaml
 OPTS="-i"
+
 cd $CURRENT_DIR
 cd ./charcoal-network/crypto-config/peerOrganizations/certifiedCompanies.example.com/ca
 PRIV_KEY=$(ls *_sk)
@@ -28,6 +29,13 @@ PRIV_KEY=$(ls *_sk)
 cd $CURRENT_DIR
 cd ./charcoal-network/base
 sed $OPTS "s/CA2_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-base.yaml
+
+cd $CURRENT_DIR
+cd ./charcoal-network/crypto-config/peerOrganizations/testOrg.example.com/ca
+PRIV_KEY=$(ls *_sk)
+cd $CURRENT_DIR
+cd ./charcoal-network/base
+sed $OPTS "s/CA3_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-base.yaml
 
 cd $CURRENT_DIR
 ./charcoal-network/scripts/generate-ccp.sh
